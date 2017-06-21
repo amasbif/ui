@@ -1,0 +1,37 @@
+{
+  "name": "stc-ui",
+  "description": "User Interface for Save the Children",
+  "keywords": [
+    "css",
+    "js",
+    "sass",
+    "mobile-first",
+    "responsive",
+    "front-end",
+    "web"
+  ],
+  "homepage": "https://www.savethechildren.net",
+  "license": "MIT",
+  "moduleType": "globals",
+  "ignore": [
+    "/.*",
+    "/_*",
+    "about",
+    "assets",
+    "docs",
+    "js/tests",
+    "nuget",
+    "CNAME",
+    "composer.json",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "font-awesome": "^4.7.0",
+    "stc-icons": "https://github.com/savethechildren/icon-font.git"
+  },
+  "resolutions": {
+    "font-awesome": "^4.7.0",
+    "bootstrap-sass": "^3.3.7"
+  }
+}

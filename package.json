@@ -1,0 +1,39 @@
+{
+  "name": "stc-ui",
+  "description": "Save the Children UI code",
+  "version": "1.0.0",
+  "style": "dist/css/stc-ui.css",
+  "keywords": [
+    "ui",
+    "save",
+    "children",
+    "front-end"
+  ],
+  "bugs": {
+    "url": "http://github.com/SavetheChildren/ui/issues"
+  },
+  "author": {
+    "name": "Damien North"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SavetheChildren/ui.git"
+  },
+  "contributors": [],
+  "license": "(MIT)",
+  "dependencies": {},
+  "engines": {
+    "node": ">=0.10.3"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-qunit": "^1.5.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.4"
+  }
+}

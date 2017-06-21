@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>International example</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../../dist/css/stc-ui.min.css" rel="stylesheet">
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3"> 
+          <div class="jumbotron">
+            <h1 class="stc-geo-alt">You are an international visitor</h1>
+            <!-- alternative elements -->
+            <h1 class="stc-geo-alt hidden" data-iso="GB">You are a British visitor</h1>
+            <h1 class="stc-geo-alt hidden" data-iso="US">You are an American visitor</h1>
+            <h1 class="stc-geo-alt hidden" data-iso="DE">You are a German visitor</h1>
+            <!-- end alternative elements -->
+            <form class="form">
+              <div class="form-group">
+                <label for="countryDropDown">Country: </label>
+                <select class="form-control stc-geo-select">
+                  <option>Select...</option>
+                  <option data-iso="GB" value="UK">United Kingdom</option>
+                  <option data-iso="US" value="USA">United States</option>
+                  <option data-iso="DE" value="Germany">Germany</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../../../dist/js/stc-ui.js"></script>
+  </body>
+</html>
