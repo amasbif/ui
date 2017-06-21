@@ -1,4 +1,4 @@
-# Save the Children Icon Font
+# Save the Children UI
 
 This project aims to create a standard UI for Save the Children.
 
