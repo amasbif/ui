@@ -28,7 +28,7 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.7",
     "font-awesome": "^4.7.0",
-    "stc-icons": "https://github.com/savethechildren/icon-font.git"
+    "stc-icons": "https://github.com/savethechildren/ui.git"
   },
   "resolutions": {
     "font-awesome": "^4.7.0",
