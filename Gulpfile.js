@@ -88,4 +88,9 @@ gulp.task('test', function() {
 });
 
 
+/**
+ * Build scripts
+ */
+gulp.task("build", ['test']);
+
 gulp.task('default', ['concat']);
