@@ -22,3 +22,8 @@ dist/
     ├── stc-ui.js
     └── stc-ui.min.js
 ```
+
+## Built With
+- [Bootstrap CSS](http://getbootstrap.com)
+- [Font Awesome](http://fontawesome.io)
+- [jQuery](https://jquery.com/)

@@ -1,0 +1,28 @@
+.stc-blocktitle {
+  text-transform: uppercase;
+  margin-left: 0.15em;
+  line-height: 1.05em;
+  a, span {
+    color: $stc-black;
+    background: $body-bg;
+    box-shadow: 0.15em 0 0 $body-bg, -0.15em 0 0 $body-bg;
+    box-decoration-break: clone;
+    strong {
+      color: $stc-red;
+      font-weight: normal;
+    }
+  }
+  &.stc-blocktitle-split {
+    a, span {
+      border-radius: 0.08em;
+      clear: left;
+      white-space: nowrap;
+      display: inline-block;
+      line-height: 1.15em;
+      float: left;
+      margin-top: -0.09em;
+      margin-bottom: -0.09em;
+    }
+    @extend .clearfix;
+  }
+} 
