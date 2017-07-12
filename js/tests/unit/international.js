@@ -24,4 +24,18 @@ jQuery(function ($) {
         stc.geo.swapGeoAlternatives("US");
         assert.equal($('#qunit-fixture').find('ul.test-alt li:visible').text(), "US", 'country correctly selected');
     });
+    
+    QUnit.test('Should return a valid user language', function (assert) {
+        assert.expect(2);
+        assert.ok(/^[a-z][a-z]$/.test(stc.geo.userLanguage), "The user language is valid");
+        assert.equal(stc.geo.pageLanguage, "en", "Page language is English");
+    });
+    
+    QUnit.test('Should return a valid translation', function (assert) {
+        assert.expect(1);
+        stc.geo.strings.fr = stc.geo.strings.fr || {};
+        stc.geo.strings.fr.bigmac = 'LE big mac';
+        assert.equal(stc.geo.t("bigmac", "fr"), "LE big mac", "Word correctly translated into French equivalent");
+    });
+    
 });

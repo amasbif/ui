@@ -2,13 +2,8 @@ var stc = stc || {};
 (function(util, $){
     
     /**
-     * Persist isMobile boolean to avoid running regex on every call
-     * @type bool
-     */
-    util.isMobile = false;
-    
-    /**
      * Uses detectmobilebrowsers.com regex to detect mobile browsers
+     * @return {boolean} True if mobile or false
      */ 
     util.detectMobile = function(){
         var check = false;
@@ -23,10 +18,15 @@ var stc = stc || {};
     };
     
     /**
-     * Sets a cookie
+     * Persist isMobile boolean to avoid running regex on every call
+     */
+    util.isMobile = util.detectMobile();
+    
+    /**
+     * Sets a cookie.
      * @param {String} cname Name of the cookie
-     * @param {String)} cvalue Value of the cookie
-     * @param {Int)} exdays Number of days the cookie will last
+     * @param {String} cvalue Value of the cookie
+     * @param {Int} exdays Number of days the cookie will last
      */
     util.setCookie = function(cname, cvalue, exdays) {
         var d = new Date();
@@ -36,9 +36,9 @@ var stc = stc || {};
     };
 
     /**
-     * Gets a cookie
-     * @param {String)} cname 
-     * @retuns (String)
+     * Gets a cookie.
+     * @param {String} cname The name of the cookie to retrieve
+     * @return {String} The value of the cookie
      */
     util.getCookie = function (cname) {
         var name = cname + "=";
@@ -68,9 +68,7 @@ var stc = stc || {};
         element.dispatchEvent(newEvent);
     };
     
-    }(stc.util = stc.util || {}, jQuery));
-    
-    stc.util.isMobile = stc.util.detectMobile();
+}(stc.util = stc.util || {}, jQuery));
 
 /** 
  * Global variables
@@ -110,28 +108,27 @@ var stc = stc || {};
      */
     geo.locate = function() {
         stc.geo.country = "";
-        var countryEvent = new CustomEvent("countryIsSet");
         stc.geo.country = stc.util.getCookie('stc_country'); 
         if(typeof stc.geo.country === 'undefined' || stc.geo.country === ""){
-          $.ajax({
-            url: 'https://apps.skype.com/countrycode',
-            timeout: 3000,
-            jsonp: "jsoncallback",
-            dataType: "jsonp"})
-            .done(function(json){
-              stc.geo.country = json.country_code;
-              stc.util.setCookie('stc_country', stc.geo.country, 2);
-              stc.util.createEvent('countryIsSet');
-            })
-            //use CloudFlare fallback if Skype fails
-            .fail(function(){
-              $.getJSON('https://www.savethechildren.net/webservices/geo/ajax.php?callback=?',
-                function(json){
-                  stc.geo.country = json.country;
-                  stc.util.setCookie('stc_country', stc.geo.country, 2);
-                  stc.util.createEvent('countryIsSet');
+            $.ajax({
+                url: 'https://apps.skype.com/countrycode',
+                timeout: 3000,
+                jsonp: "jsoncallback",
+                dataType: "jsonp"})
+                .done(function(json){
+                    stc.geo.country = json.country_code;
+                    stc.util.setCookie('stc_country', stc.geo.country, 2);
+                    stc.util.createEvent('countryIsSet');
+                })
+                //use CloudFlare fallback if Skype fails
+                .fail(function(){
+                    $.getJSON('https://www.savethechildren.net/webservices/geo/ajax.php?callback=?',
+                        function(json){
+                            stc.geo.country = json.country;
+                            stc.util.setCookie('stc_country', stc.geo.country, 2);
+                            stc.util.createEvent('countryIsSet');
+                        });
                 });
-            });
         }
         else {
             jQuery(function($) {
@@ -141,8 +138,80 @@ var stc = stc || {};
         return stc.geo.country;
     };
     
+    /**
+     * Gets the user language based on browser settings
+     * Uses https://ajaxhttpheaders.appspot.com to get accurate settings
+     * @return {string} two-letter language code
+     */
+    geo.getUserLanguage = function() {
+        geo.userLanguage = stc.util.getCookie('stc_user_language');
+        if (typeof geo.userLanguage === 'undefined' || geo.userLanguage === "") {
+            $.ajax({
+                url: "https://ajaxhttpheaders.appspot.com",
+                dataType: 'jsonp',
+                success: function (headers) {
+                    language = headers['Accept-Language'].substr(0, 2).toLowerCase();
+                    geo.userLanguage = language;
+                    stc.util.setCookie('stc_user_language', geo.userLanguage, 2);
+                    stc.util.createEvent('userLanguageIsSet');
+                    return geo.userLanguage;
+                }
+            });
+        }
+        else {
+            stc.util.createEvent('userLanguageIsSet');
+            return geo.userLanguage;
+        }
+        return geo.userLanguage;
+    };
+
+    /**
+     * Gets the language of the page
+     * @return {string} two-letter language code
+     */
+    geo.pageLanguage = document.documentElement.lang.substr(0,2).toLowerCase();
+    
+    /**
+     * Declare empty array to hold translation strings
+     */
+    geo.strings = geo.strings || {};
+    
+    // Declare current page language translation strings obejct
+    if(geo.pageLanguage && geo.pageLanguage !== "") {
+        geo.strings[geo.pageLanguage] = geo.strings[geo.pageLanguage] || {};
+    }
+    
+    /**
+     * Translates a string from English into another language if the string exists
+     * @param {string} original The original string to translate
+     * @param {string} lang The two-letter language code to translate into, defaults to current page language
+     * @return {string} The translated string if it exists or the original string
+     */
+    geo.t = function(original, lang) {
+        lang = lang || geo.pageLanguage;
+        if(!lang || lang === "") {
+            return original;
+        }
+        //try to get language localized strings object
+        var strings = geo.strings[lang];
+        if(!strings || typeof(strings) !== 'object') {
+            return original;
+        }
+        if(!strings[original] || strings[original] === "") {
+            return original;
+        }
+        else {
+            return strings[original];
+        }
+    };
+    
+    
+    
     //locate on load
     stc.geo.locate();
+    
+    //language on load
+    stc.geo.getUserLanguage();
     
     window.addEventListener("countryIsSet", function(e) { 
         stc.geo.swapGeoAlternatives(stc.geo.country);
@@ -151,50 +220,105 @@ var stc = stc || {};
 }(stc.geo = stc.geo || {}, jQuery));
 
 
+var stc = stc || {};
+(function (validate, $) {
 
-/**
- * Creates YouTube embed code from a YouTube link.
- * Fades the poster out and video in.
- */
-jQuery(function ($) {
-    $('.stc-yt a').click(function(e) {
-        //on mobiles open video directly
-        if(!stc.util.isMobile) {
-            e.preventDefault();
-            var ytsrc = $(this).attr('href');
-            var ytid = stc.video.getYtId(ytsrc);
-            ytsrc = stc.video.buildYtEmbed(ytid);
-            var ytframe = $('<iframe/>');
-            $(ytframe).attr('src', ytsrc);
-            $(this).fadeOut(500, function() {
-                $(ytframe).appendTo($(this).parent()).fadeIn();
-            });
+    /**
+     * Validates a form and checks for missing mandatory fields
+     * and wrongly-formatted number and email fields
+     * @param {object} form The form DOM element to validate
+     * @return {boolean} True if validates or false
+     */
+    validate.validateForm = function(form) {
+        //if HTML5 form validation is supported, skip JS validation
+        if (typeof document.createElement('input').checkValidity === 'function') {
+            return true;
         }
-    });
-});
+        
+        var valid = false;
+        //check the form contains fields
+        var fields = $(form).find('input,select,textarea');
+        if (fields.length < 1) {
+            return false;
+        }
+        //clear validation CSS
+        $(fields).parent().removeClass("has-error").find('.help-block').addClass('hidden');
+
+        $(fields).each(function (i, v) {
+            var type = $(v).attr('type');
+            var required = $(v).prop('required');
+            if (!required) {
+                valid = true;
+                return true;
+            }
+            
+            //check for custom regex
+            if(patt && patt !== "") {
+                valid = patt.test($(v).val());
+                if (!valid) {
+                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
+                }
+                return valid;
+            }
+            
+            //check for valid email
+            if (type === "email") {
+                valid = validate.validateEmail($(v).val());
+                if (!valid) {
+                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
+                }
+                return valid;
+            }
+            //check for valid number
+            if (type === "number") {
+                valid = $.isNumeric($(v).val());
+                if (!valid) {
+                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
+                }
+                return valid;
+            }
+            //check for valid url
+            if (type === "url") {
+                valid = /^https?:\/\/.+/.test($(v).val());
+                if (!valid) {
+                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
+                }
+                return valid;
+            }
+            if ($(v).val() === "") {
+                valid = false;
+                $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
+                return valid;
+            }
+        });
+        return valid;
+    };
+
+})(stc.validate = stc.validate || {}, jQuery);
+
 
 var stc = stc || {};
 (function(video, $){
     /**
-     * Gets a YouTube video ID from a given YouTube URL
-     * @param (string) url
-     * @returns {String} 
+     * Gets a YouTube video ID from a given YouTube URL.
+     * @param {string} url The URL of the YouTube video
+     * @return {String} The YouTube video ID
      */
     video.getYtId = function(url) {
         var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         var match = url.match(regExp);
         if (match && match[2].length === 11) {
-          return match[2];
+            return match[2];
         }
         else {
-          return null;
+            return null;
         }
     };
 
     /**
      * Builds the YouTube embed code from a given video ID.
-     * @param {String} vid
-     * @returns {String}
+     * @param {String} vid The YouTuve video ID
+     * @return {String} the YouTube embed code
      */
     video.buildYtEmbed = function(vid) {
         var params = {
@@ -205,4 +329,25 @@ var stc = stc || {};
         };
         return "https://www.youtube.com/embed/" + vid + "?" + $.param(params);
     };
+    
+    /**
+    * Creates YouTube embed code from a YouTube link.
+    * Fades the poster out and video in.
+    */
+    $(function ($) {
+        $('.stc-yt a').click(function(e) {
+            //on mobiles open video directly
+            if(!stc.util.isMobile) {
+                e.preventDefault();
+                var ytsrc = $(this).attr('href');
+                var ytid = stc.video.getYtId(ytsrc);
+                ytsrc = stc.video.buildYtEmbed(ytid);
+                var ytframe = $('<iframe/>');
+                $(ytframe).attr('src', ytsrc);
+                $(this).fadeOut(500, function() {
+                    $(ytframe).appendTo($(this).parent()).fadeIn();
+                });
+            }
+        });
+    });
 }(stc.video = stc.video || {}, jQuery));

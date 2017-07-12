@@ -1,47 +1,26 @@
 
-/**
- * Creates YouTube embed code from a YouTube link.
- * Fades the poster out and video in.
- */
-jQuery(function ($) {
-    $('.stc-yt a').click(function(e) {
-        //on mobiles open video directly
-        if(!stc.util.isMobile) {
-            e.preventDefault();
-            var ytsrc = $(this).attr('href');
-            var ytid = stc.video.getYtId(ytsrc);
-            ytsrc = stc.video.buildYtEmbed(ytid);
-            var ytframe = $('<iframe/>');
-            $(ytframe).attr('src', ytsrc);
-            $(this).fadeOut(500, function() {
-                $(ytframe).appendTo($(this).parent()).fadeIn();
-            });
-        }
-    });
-});
-
 var stc = stc || {};
 (function(video, $){
     /**
-     * Gets a YouTube video ID from a given YouTube URL
-     * @param (string) url
-     * @returns {String} 
+     * Gets a YouTube video ID from a given YouTube URL.
+     * @param {string} url The URL of the YouTube video
+     * @return {String} The YouTube video ID
      */
     video.getYtId = function(url) {
         var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
         var match = url.match(regExp);
         if (match && match[2].length === 11) {
-          return match[2];
+            return match[2];
         }
         else {
-          return null;
+            return null;
         }
     };
 
     /**
      * Builds the YouTube embed code from a given video ID.
-     * @param {String} vid
-     * @returns {String}
+     * @param {String} vid The YouTuve video ID
+     * @return {String} the YouTube embed code
      */
     video.buildYtEmbed = function(vid) {
         var params = {
@@ -52,4 +31,25 @@ var stc = stc || {};
         };
         return "https://www.youtube.com/embed/" + vid + "?" + $.param(params);
     };
+    
+    /**
+    * Creates YouTube embed code from a YouTube link.
+    * Fades the poster out and video in.
+    */
+    $(function ($) {
+        $('.stc-yt a').click(function(e) {
+            //on mobiles open video directly
+            if(!stc.util.isMobile) {
+                e.preventDefault();
+                var ytsrc = $(this).attr('href');
+                var ytid = stc.video.getYtId(ytsrc);
+                ytsrc = stc.video.buildYtEmbed(ytid);
+                var ytframe = $('<iframe/>');
+                $(ytframe).attr('src', ytsrc);
+                $(this).fadeOut(500, function() {
+                    $(ytframe).appendTo($(this).parent()).fadeIn();
+                });
+            }
+        });
+    });
 }(stc.video = stc.video || {}, jQuery));

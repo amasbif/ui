@@ -2,13 +2,8 @@ var stc = stc || {};
 (function(util, $){
     
     /**
-     * Persist isMobile boolean to avoid running regex on every call
-     * @type bool
-     */
-    util.isMobile = false;
-    
-    /**
      * Uses detectmobilebrowsers.com regex to detect mobile browsers
+     * @return {boolean} True if mobile or false
      */ 
     util.detectMobile = function(){
         var check = false;
@@ -23,10 +18,15 @@ var stc = stc || {};
     };
     
     /**
-     * Sets a cookie
+     * Persist isMobile boolean to avoid running regex on every call
+     */
+    util.isMobile = util.detectMobile();
+    
+    /**
+     * Sets a cookie.
      * @param {String} cname Name of the cookie
-     * @param {String)} cvalue Value of the cookie
-     * @param {Int)} exdays Number of days the cookie will last
+     * @param {String} cvalue Value of the cookie
+     * @param {Int} exdays Number of days the cookie will last
      */
     util.setCookie = function(cname, cvalue, exdays) {
         var d = new Date();
@@ -36,9 +36,9 @@ var stc = stc || {};
     };
 
     /**
-     * Gets a cookie
-     * @param {String)} cname 
-     * @retuns (String)
+     * Gets a cookie.
+     * @param {String} cname The name of the cookie to retrieve
+     * @return {String} The value of the cookie
      */
     util.getCookie = function (cname) {
         var name = cname + "=";
@@ -68,6 +68,4 @@ var stc = stc || {};
         element.dispatchEvent(newEvent);
     };
     
-    }(stc.util = stc.util || {}, jQuery));
-    
-    stc.util.isMobile = stc.util.detectMobile();
+}(stc.util = stc.util || {}, jQuery));

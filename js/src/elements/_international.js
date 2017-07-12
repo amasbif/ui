@@ -32,28 +32,27 @@ var stc = stc || {};
      */
     geo.locate = function() {
         stc.geo.country = "";
-        var countryEvent = new CustomEvent("countryIsSet");
         stc.geo.country = stc.util.getCookie('stc_country'); 
         if(typeof stc.geo.country === 'undefined' || stc.geo.country === ""){
-          $.ajax({
-            url: 'https://apps.skype.com/countrycode',
-            timeout: 3000,
-            jsonp: "jsoncallback",
-            dataType: "jsonp"})
-            .done(function(json){
-              stc.geo.country = json.country_code;
-              stc.util.setCookie('stc_country', stc.geo.country, 2);
-              stc.util.createEvent('countryIsSet');
-            })
-            //use CloudFlare fallback if Skype fails
-            .fail(function(){
-              $.getJSON('https://www.savethechildren.net/webservices/geo/ajax.php?callback=?',
-                function(json){
-                  stc.geo.country = json.country;
-                  stc.util.setCookie('stc_country', stc.geo.country, 2);
-                  stc.util.createEvent('countryIsSet');
+            $.ajax({
+                url: 'https://apps.skype.com/countrycode',
+                timeout: 3000,
+                jsonp: "jsoncallback",
+                dataType: "jsonp"})
+                .done(function(json){
+                    stc.geo.country = json.country_code;
+                    stc.util.setCookie('stc_country', stc.geo.country, 2);
+                    stc.util.createEvent('countryIsSet');
+                })
+                //use CloudFlare fallback if Skype fails
+                .fail(function(){
+                    $.getJSON('https://www.savethechildren.net/webservices/geo/ajax.php?callback=?',
+                        function(json){
+                            stc.geo.country = json.country;
+                            stc.util.setCookie('stc_country', stc.geo.country, 2);
+                            stc.util.createEvent('countryIsSet');
+                        });
                 });
-            });
         }
         else {
             jQuery(function($) {
@@ -63,8 +62,80 @@ var stc = stc || {};
         return stc.geo.country;
     };
     
+    /**
+     * Gets the user language based on browser settings
+     * Uses https://ajaxhttpheaders.appspot.com to get accurate settings
+     * @return {string} two-letter language code
+     */
+    geo.getUserLanguage = function() {
+        geo.userLanguage = stc.util.getCookie('stc_user_language');
+        if (typeof geo.userLanguage === 'undefined' || geo.userLanguage === "") {
+            $.ajax({
+                url: "https://ajaxhttpheaders.appspot.com",
+                dataType: 'jsonp',
+                success: function (headers) {
+                    language = headers['Accept-Language'].substr(0, 2).toLowerCase();
+                    geo.userLanguage = language;
+                    stc.util.setCookie('stc_user_language', geo.userLanguage, 2);
+                    stc.util.createEvent('userLanguageIsSet');
+                    return geo.userLanguage;
+                }
+            });
+        }
+        else {
+            stc.util.createEvent('userLanguageIsSet');
+            return geo.userLanguage;
+        }
+        return geo.userLanguage;
+    };
+
+    /**
+     * Gets the language of the page
+     * @return {string} two-letter language code
+     */
+    geo.pageLanguage = document.documentElement.lang.substr(0,2).toLowerCase();
+    
+    /**
+     * Declare empty array to hold translation strings
+     */
+    geo.strings = geo.strings || {};
+    
+    // Declare current page language translation strings obejct
+    if(geo.pageLanguage && geo.pageLanguage !== "") {
+        geo.strings[geo.pageLanguage] = geo.strings[geo.pageLanguage] || {};
+    }
+    
+    /**
+     * Translates a string from English into another language if the string exists
+     * @param {string} original The original string to translate
+     * @param {string} lang The two-letter language code to translate into, defaults to current page language
+     * @return {string} The translated string if it exists or the original string
+     */
+    geo.t = function(original, lang) {
+        lang = lang || geo.pageLanguage;
+        if(!lang || lang === "") {
+            return original;
+        }
+        //try to get language localized strings object
+        var strings = geo.strings[lang];
+        if(!strings || typeof(strings) !== 'object') {
+            return original;
+        }
+        if(!strings[original] || strings[original] === "") {
+            return original;
+        }
+        else {
+            return strings[original];
+        }
+    };
+    
+    
+    
     //locate on load
     stc.geo.locate();
+    
+    //language on load
+    stc.geo.getUserLanguage();
     
     window.addEventListener("countryIsSet", function(e) { 
         stc.geo.swapGeoAlternatives(stc.geo.country);

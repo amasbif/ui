@@ -14,7 +14,7 @@ var gulp = require("gulp"),
     sass = require("gulp-sass"),
     cssmin = require("gulp-cssmin"),
     rename = require("gulp-rename"),
-    jshint = require("gulp-jshint"),
+    eslint = require("gulp-eslint"),
     qunit = require("gulp-qunit"),
     uglify = require("gulp-uglify");
 
@@ -31,16 +31,17 @@ gulp.task("concat", function() {
 });
 
 /**
- * jshint task for all javascript files
+ * eslint task for all javascript files
  */
-gulp.task('jshint', function () {
+gulp.task('eslint', function () {
     return gulp.src(paths.jsSrc)
-        .pipe(jshint({
-            browser: true,
-            strict: false,
-            "-W117": true
+        .pipe(eslint({
+            configFile: "js/eslint.config.json"
         }))
-        .pipe(jshint.reporter('default'));
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on 
+        // lint error, return the stream and pipe to failAfterError last. 
+        .pipe(eslint.failAfterError());
 });
 
 /**
@@ -65,7 +66,7 @@ gulp.task('sass:watch', function () {
  */
 gulp.task('scripts:watch', function () {
     gulp.watch(paths.jsSrc, ['concat']);
-    gulp.watch(paths.jsSrc, ['jshint']);
+    gulp.watch(paths.jsSrc, ['eslint']);
     gulp.watch(paths.jsSrc, ['test']);
 });
 
@@ -91,6 +92,6 @@ gulp.task('test', function() {
 /**
  * Build scripts
  */
-gulp.task("build", ['test']);
+gulp.task("build", ['sass', 'cssmin', 'concat', 'test']);
 
 gulp.task('default', ['concat']);
