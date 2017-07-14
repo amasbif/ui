@@ -221,80 +221,132 @@ var stc = stc || {};
 
 
 var stc = stc || {};
-(function (validate, $) {
-
+(function(geo, $){
+    
     /**
-     * Validates a form and checks for missing mandatory fields
-     * and wrongly-formatted number and email fields
-     * @param {object} form The form DOM element to validate
-     * @return {boolean} True if validates or false
+     * List of Member countries and their website URLs
      */
-    validate.validateForm = function(form) {
-        //if HTML5 form validation is supported, skip JS validation
-        if (typeof document.createElement('input').checkValidity === 'function') {
-            return true;
+    geo.members = {
+        AO: {
+            url: "http://www.savethechildren.org.au/",
+            title: "Australia"
+        },
+        CA: {
+            url: "http://www.savethechildren.ca",
+            title: "Canada"
+        },
+        DK: {
+            url: "http://www.redbarnet.dk/",
+            title: "Denmark"
+        },
+        DO: {
+            url: "http://savethechildren.org.do/",
+            title: "Dominican Republic"
+        },
+        FJ: {
+            url: "http://www.savethechildren.org.fj",
+            title: "Fiji"
+        },
+        FI: {
+            url: "http://www.pelastakaalapset.fi/",
+            title: "Finland"
+        },
+        DE: {
+            url: "http://www.savethechildren.de/",
+            title: "Germany"
+        },
+        HN: {
+            url: "http://www.savethechildrenhonduras.org/",
+            title: "Honduras"
+        },
+        HK: {
+            url: "http://www.savethechildren.org.hk",
+            title: "Hong Kong"
+        },
+        IS: {
+            url: "http://www.barnaheill.is",
+            title: "Iceland"
+        },
+        IN: {
+            url: "http://www.savethechildren.in/",
+            title: "India"
+        },
+        IT: {
+            url: "http://www.savethechildren.it",
+            title: "Italy"
+        },
+        JP: {
+            url: "http://www.savechildren.or.jp",
+            title: "Japan"
+        },
+        JO: {
+            url: "http://jordan.savethechildren.net",
+            title: "Jordan"
+        },
+        KR: {
+            url: "http://www.sc.or.kr",
+            title: "Korea"
+        },
+        LT: {
+            url: "https://www.gelbekitvaikus.lt",
+            title: "Lithuania"
+        },
+        MX: {
+            url: "https://www.savethechildren.mx/",
+            title: "Mexico"
+        },
+        NL: {
+            url: "https://www.savethechildren.nl",
+            title: "Netherlands"
+        },
+        NZ: {
+            url: "http://www.savethechildren.org.nz",
+            title: "New Zealand"
+        },
+        NO: {
+            url: "http://www.reddbarna.no",
+            title: "Norway"
+        },
+        RO: {
+            url: "http://www.salvaticopiii.ro",
+            title: "Romania"
+        },
+        ZA: {
+            url: "http://www.savethechildren.org.za",
+            title: "South Africa"
+        },
+        ES: {
+            url: "http://www.savethechildren.es",
+            title: "Spain"
+        },
+        SZ: {
+            url: "http://www.savethechildren.org.sz",
+            title: "Swaziland"
+        },
+        SE: {
+            url: "http://www.rb.se",
+            title: "Sweden"
+        },
+        CH: {
+            url: "http://www.savethechildren.ch",
+            title: "Switzerland"
+        },
+        GB: {
+            url: "http://www.savethechildren.org.uk",
+            title: "United Kingdom"
+        },
+        US: {
+            url: "http://www.savethechildren.org",
+            title: "United States"
         }
-        
-        var valid = false;
-        //check the form contains fields
-        var fields = $(form).find('input,select,textarea');
-        if (fields.length < 1) {
-            return false;
-        }
-        //clear validation CSS
-        $(fields).parent().removeClass("has-error").find('.help-block').addClass('hidden');
-
-        $(fields).each(function (i, v) {
-            var type = $(v).attr('type');
-            var required = $(v).prop('required');
-            if (!required) {
-                valid = true;
-                return true;
-            }
-            
-            //check for custom regex
-            if(patt && patt !== "") {
-                valid = patt.test($(v).val());
-                if (!valid) {
-                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
-                }
-                return valid;
-            }
-            
-            //check for valid email
-            if (type === "email") {
-                valid = validate.validateEmail($(v).val());
-                if (!valid) {
-                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
-                }
-                return valid;
-            }
-            //check for valid number
-            if (type === "number") {
-                valid = $.isNumeric($(v).val());
-                if (!valid) {
-                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
-                }
-                return valid;
-            }
-            //check for valid url
-            if (type === "url") {
-                valid = /^https?:\/\/.+/.test($(v).val());
-                if (!valid) {
-                    $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
-                }
-                return valid;
-            }
-            if ($(v).val() === "") {
-                valid = false;
-                $(v).focus().parent().addClass("has-error").find('.help-block').removeClass('hidden');
-                return valid;
-            }
-        });
-        return valid;
     };
 
-})(stc.validate = stc.validate || {}, jQuery);
+    /**
+     * Gets the user Member country object if it exists
+     */
+    geo.memberCountry = stc.geo.members[geo.country];
+    
+}(stc.geo = stc.geo || {}, jQuery));
 
 
 var stc = stc || {};

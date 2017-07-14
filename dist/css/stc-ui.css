@@ -8450,4 +8450,5 @@ a {
     color: #000;
     display: inline; }
     .stc-blocktitle.stc-blocktitle-nospan strong {
-      font-weight: inherit; }
+      font-weight: inherit;
+      color: #DA291C; }
