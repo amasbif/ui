@@ -70,6 +70,22 @@ var stc = stc || {};
     
 }(stc.util = stc.util || {}, jQuery));
 
+
+/* polyfill fix for custom event in Internet Explorer */
+(function () {
+    if (typeof window.CustomEvent === "function") {
+        return false;
+    } //If not IE
+    function CustomEvent ( event, params ) {
+        params = params || { bubbles: false, cancelable: false, detail: undefined };
+        var evt = document.createEvent( 'CustomEvent' );
+        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+        return evt;
+    }
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent;
+})();
+
 /** 
  * Global variables
  */
@@ -340,11 +356,47 @@ var stc = stc || {};
             title: "United States"
         }
     };
+    
+    /**
+     * Redirects visitors to a Member website, defaults to current member country
+     * @param {object} [member = geo.memberCountry] The Member object to redirect to
+     */
+    geo.goToMemberSite = function(member) {
+        member = member || geo.memberCountry;
+        if(typeof(member) !== "undefined" && typeof(member.url) !== "undefined") {
+            window.location = member.url;
+        }
+    };
+    
+    /**
+     * Adds Member country select options to a given drop-down
+     * @param {object} select The select element to add options to
+     * @param {string} attribute The Member object attribute to use as the option value paramater
+     */
+    geo.addMembersSelectOptions = function(select, attribute) {
+        if(select[0].nodeName === "SELECT") {
+            $.each(geo.members, function(i,v) {
+                var value = v[attribute] || i;
+                var option = $('<option>' + v.title + '</option>').attr({"value": value, "data-geo": i});
+                $(select).append(option);
+            });
+        }
+        //run the geo selection
+        geo.swapGeoAlternatives();
+        //if the value is a url, then add an onchange redirect behaviour 
+        if(/url/.test(attribute)) {
+            $(select).on('change', function() {
+                window.location = $(this).val();
+            });
+        }
+    };
 
     /**
      * Gets the user Member country object if it exists
-     */
-    geo.memberCountry = stc.geo.members[geo.country];
+     */ 
+    window.addEventListener("countryIsSet", function(e) { 
+        geo.memberCountry = stc.geo.members[geo.country];
+    });
     
 }(stc.geo = stc.geo || {}, jQuery));
 

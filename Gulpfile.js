@@ -73,7 +73,7 @@ gulp.task('scripts:watch', function () {
 /**
  * Minify css files
  */
-gulp.task('cssmin', function() {
+gulp.task('cssmin', ['sass'], function() {
     return gulp.src(paths.toMin)
       .pipe(cssmin())
       .pipe(rename({ suffix: '.min' }))
@@ -83,7 +83,7 @@ gulp.task('cssmin', function() {
 /**
  * QUnit tests
  */
-gulp.task('test', function() {
+gulp.task('test', ['cssmin', 'concat'], function() {
     return gulp.src(paths.tests + 'index.html')
         .pipe(qunit());
 });
@@ -92,6 +92,6 @@ gulp.task('test', function() {
 /**
  * Build scripts
  */
-gulp.task("build", ['sass', 'cssmin', 'concat', 'test']);
+gulp.task("build", ['cssmin', 'test']);
 
 gulp.task('default', ['concat']);
