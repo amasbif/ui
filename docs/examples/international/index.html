@@ -41,6 +41,9 @@
     <script src="../../../dist/js/stc-ui.js"></script>
     <script>
       stc.geo.addMembersSelectOptions($('#countryDropDown'),'url');
+      window.addEventListener('countryIsSet', function() {
+        stc.geo.suggestMemberSite(null, null, 0);
+      });
     </script>
   </body>
 </html>

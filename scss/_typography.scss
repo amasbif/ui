@@ -42,7 +42,7 @@ $font-family-header: "Trade Gothic LT", $font-family-sans-serif;
 $font-family-base: "Gill Sans Infant", $font-family-sans-serif;
 
 h1 {
-  font-family: "Trade Gothic LT", $font-family-sans-serif;
+  font-family: $font-family-header;
   font-weight: 400;
   font-size: 36px;
   @media (min-width: $screen-md-min) { font-size: 48px; }
@@ -55,8 +55,8 @@ h1 {
     line-height: 90%;
   }
 }
-h2, h3 {
-  font-family: "Trade Gothic LT", $font-family-sans-serif;
+h2, h3, h4 {
+  font-family: $font-family-header;
   font-weight: 400;
   line-height: 1.2;
   span {

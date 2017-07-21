@@ -3386,7 +3386,7 @@ html {
   -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Gill Sans Infant", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.42857;
   color: #222221;
@@ -7515,7 +7515,7 @@ button.close {
   position: absolute;
   z-index: 1070;
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Gill Sans Infant", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -7628,7 +7628,7 @@ button.close {
   display: none;
   max-width: 276px;
   padding: 1px;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Gill Sans Infant", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   letter-spacing: normal;
@@ -8342,11 +8342,11 @@ h1 {
     border-radius: 4px;
     line-height: 90%; }
 
-h2, h3 {
+h2, h3, h4 {
   font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   line-height: 1.2; }
-  h2 span, h3 span {
+  h2 span, h3 span, h4 span {
     color: #DA291C; }
 
 h2 {

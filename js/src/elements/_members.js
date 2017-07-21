@@ -6,116 +6,144 @@ var stc = stc || {};
      */
     geo.members = {
         AO: {
-            url: "http://www.savethechildren.org.au/",
-            title: "Australia"
+            iso: "AO",
+            title: "Australia",
+            url: "http://www.savethechildren.org.au/"
         },
         CA: {
-            url: "http://www.savethechildren.ca",
-            title: "Canada"
+            iso: "CA",
+            title: "Canada",
+            url: "http://www.savethechildren.ca"
         },
         DK: {
-            url: "http://www.redbarnet.dk/",
-            title: "Denmark"
+            iso: "DK",
+            title: "Denmark",
+            url: "http://www.redbarnet.dk/"
         },
         DO: {
-            url: "http://savethechildren.org.do/",
-            title: "Dominican Republic"
+            iso: "DO",
+            title: "Dominican Republic",
+            url: "http://savethechildren.org.do/"
         },
         FJ: {
-            url: "http://www.savethechildren.org.fj",
-            title: "Fiji"
+            iso: "FJ",
+            title: "Fiji",
+            url: "http://www.savethechildren.org.fj"
         },
         FI: {
-            url: "http://www.pelastakaalapset.fi/",
-            title: "Finland"
+            iso: "FI",
+            title: "Finland",
+            url: "http://www.pelastakaalapset.fi/"
         },
         DE: {
-            url: "http://www.savethechildren.de/",
-            title: "Germany"
+            iso: "DE",
+            title: "Germany",
+            url: "http://www.savethechildren.de/"
         },
         HN: {
-            url: "http://www.savethechildrenhonduras.org/",
-            title: "Honduras"
+            iso: "HN",
+            title: "Honduras",
+            url: "http://www.savethechildrenhonduras.org/"
         },
         HK: {
-            url: "http://www.savethechildren.org.hk",
-            title: "Hong Kong"
+            iso: "HK",
+            title: "Hong Kong",
+            url: "http://www.savethechildren.org.hk"
         },
         IS: {
-            url: "http://www.barnaheill.is",
-            title: "Iceland"
+            iso: "IS",
+            title: "Iceland",
+            url: "http://www.barnaheill.is"
         },
         IN: {
-            url: "http://www.savethechildren.in/",
-            title: "India"
+            iso: "IN",
+            title: "India",
+            url: "http://www.savethechildren.in/"
         },
         IT: {
-            url: "http://www.savethechildren.it",
-            title: "Italy"
+            iso: "IT",
+            title: "Italy",
+            url: "http://www.savethechildren.it"
         },
         JP: {
-            url: "http://www.savechildren.or.jp",
-            title: "Japan"
+            iso: "JP",
+            title: "Japan",
+            url: "http://www.savechildren.or.jp"
         },
         JO: {
-            url: "http://jordan.savethechildren.net",
-            title: "Jordan"
+            iso: "JO",
+            title: "Jordan",
+            url: "http://jordan.savethechildren.net"
         },
         KR: {
-            url: "http://www.sc.or.kr",
-            title: "Korea"
+            iso: "KR",
+            title: "Korea",
+            url: "http://www.sc.or.kr"
         },
         LT: {
-            url: "https://www.gelbekitvaikus.lt",
-            title: "Lithuania"
+            iso: "LT",
+            title: "Lithuania",
+            url: "https://www.gelbekitvaikus.lt"
         },
         MX: {
-            url: "https://www.savethechildren.mx/",
-            title: "Mexico"
+            iso: "MX",
+            title: "Mexico",
+            url: "https://www.savethechildren.mx/"
         },
         NL: {
-            url: "https://www.savethechildren.nl",
-            title: "Netherlands"
+            iso: "NL",
+            title: "Netherlands",
+            url: "https://www.savethechildren.nl"
         },
         NZ: {
-            url: "http://www.savethechildren.org.nz",
-            title: "New Zealand"
+            iso: "NZ",
+            title: "New Zealand",
+            url: "http://www.savethechildren.org.nz"
         },
         NO: {
-            url: "http://www.reddbarna.no",
-            title: "Norway"
+            iso: "NO",
+            title: "Norway",
+            url: "http://www.reddbarna.no"
         },
         RO: {
-            url: "http://www.salvaticopiii.ro",
-            title: "Romania"
+            iso: "RO",
+            title: "Romania",
+            url: "http://www.salvaticopiii.ro"
         },
         ZA: {
-            url: "http://www.savethechildren.org.za",
-            title: "South Africa"
+            iso: "ZA",
+            title: "South Africa",
+            url: "http://www.savethechildren.org.za"
         },
         ES: {
-            url: "http://www.savethechildren.es",
-            title: "Spain"
+            iso: "ES",
+            title: "Spain",
+            url: "http://www.savethechildren.es"
         },
         SZ: {
-            url: "http://www.savethechildren.org.sz",
-            title: "Swaziland"
+            iso: "SZ",
+            title: "Swaziland",
+            url: "http://www.savethechildren.org.sz"
         },
         SE: {
-            url: "http://www.rb.se",
-            title: "Sweden"
+            iso: "SE",
+            title: "Sweden",
+            url: "http://www.rb.se"
         },
         CH: {
-            url: "http://www.savethechildren.ch",
-            title: "Switzerland"
+            iso: "CH",
+            title: "Switzerland",
+            url: "http://www.savethechildren.ch"
         },
         GB: {
-            url: "http://www.savethechildren.org.uk",
-            title: "United Kingdom"
+            iso: "GB",
+            title: "United Kingdom",
+            url: "http://www.savethechildren.org.uk"
         },
         US: {
-            url: "http://www.savethechildren.org",
-            title: "United States"
+            iso: "US",
+            title: "United States",
+            url: "http://www.savethechildren.org"
         }
     };
     
@@ -152,11 +180,53 @@ var stc = stc || {};
             });
         }
     };
+    
+    /**
+     * Creates a modal window suggesting the visitor goes to the relevant Member country website.
+     * @param {stc.member} [member = geo.countryMember] 
+     *   The Member country to suggest to the visitor. Defaults to the current Member country if set.
+     * @param {HTMLElement} [element = body]
+     *   The HTML element to place the modal window in. Defaults to body.
+     * @param {int} [days = 1]
+     *   The number of days to remember the visitor choice (if they choose to stay). Defaults to 1 day.
+     */
+    geo.suggestMemberSite = function(member, element, days) {
+        member = member || geo.memberCountry;
+        element = element || $('body');
+        if(days !== 0 ) {
+            days = days || 1;
+        }
+        if(typeof(member) !== "undefined" && typeof(member.url) !== "undefined" && stc.util.getCookie('stc_suggest_denied') !== "1") {
+            var modal = $('<div/>').attr({id:'memberSuggestModal', class: 'modal fade', role: 'dialog', 'tab-index': '-1'})
+                .append($('<div/>').attr({class:'modal-dialog', role: 'document'})
+                    .append($('<div/>').attr({class:'modal-content'})
+                        .append($('<div/>').attr({class:'modal-header'})
+                            .append($('<button/>').attr({type:'button', class:'close', 'data-dismiss':'modal', 'aria-label':'Close'})
+                                .append($('<span/>').attr('aria-hidden', 'true').html('&times;'))
+                            )
+                        )
+                        .append($('<div/>').attr({class:'modal-body text-center'})
+                            .append($('<h4/>').text('Welcome, ' + member.title + ' friend!'))
+                            .append('<p>Good news, Save the Children has a website in ' + ($.inArray(member.iso, ['GB','US','NL']) > -1 ? "the " : "") + member.title + '.<br/>Do you wish to visit our ' + member.title + ' website?</p>')
+                        )
+                        .append($('<div/>').attr({class:'modal-footer'})
+                            .append($('<button/>').attr({type:'button', class:'btn btn-default', 'data-dismiss':'modal'}).html('Stay here'))
+                            .append($('<a>').attr({href:member.url, class:'btn btn-primary'}).html('Go to ' + member.title))
+                        )
+                    )
+                );
+            $(element).append($(modal).modal().on('hidden.bs.modal', function (e) {
+                if(days > 0) {
+                    stc.util.setCookie("stc_suggest_denied", "1", days);
+                }
+            })); 
+        }
+    };
 
     /**
      * Gets the user Member country object if it exists
      */ 
-    window.addEventListener("countryIsSet", function(e) { 
+    window.addEventListener("countryIsSet", function(e) {
         geo.memberCountry = stc.geo.members[geo.country];
     });
     
