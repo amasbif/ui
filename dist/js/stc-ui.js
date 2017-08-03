@@ -107,6 +107,22 @@ var stc = stc || {};
         return urlParsingNode.cloneNode(false).href;
     };
     
+    /**
+     * Hides the HTML body on the page when the page loads. 
+     * Use when redirecting users.
+     */
+    util.hideOnLoad = function() {
+        $('body').hide();
+    };
+    
+    /**
+     * Shows the HTML body if the page content needs to be displayed. 
+     * Use when redirecting users is not possible and content must appear.
+     */
+    util.unhide = function() {
+        $('body').show();
+    };
+    
 }(stc.util = stc.util || {}, jQuery));
 
 
@@ -151,6 +167,20 @@ var stc = stc || {};
                 return false;
             }
         });
+    };
+    
+    /**
+     * Changes the href attribute of a given link to a country-specific link.
+     * @param {HTMLelement} linkElement The link element to modify.
+     * @param {object} countryLinks The list of country links in a JSON object. 
+     *   The object should have an iso  as key and url as value: {GB: '#urltoGB'}
+     * @return {Boolean} False if no country set or invalid input.
+     */
+    geo.changeCountryLink = function(linkElement, countryLinks) {
+        if(!geo.country || geo.country === "" || !countryLinks[stc.geo.country]) {
+            return false;
+        }
+        $(linkElement).attr('href', countryLinks[stc.geo.country]);
     };
 
     /**
@@ -219,6 +249,36 @@ var stc = stc || {};
         }
         return geo.userLanguage;
     };
+    
+    /**
+     * Sets the user language variable and cookie.
+     * @param {string} lng The two-letter language code
+     * @return {Boolean} True if country was set or false.
+     */
+    geo.setUserLanguage = function(lng) {
+        if(lng.length !== 2) {
+            return false;
+        }
+        geo.userLanguage = lng;
+        stc.util.setCookie('stc_user_language', geo.userLanguage, 2);
+        stc.util.createEvent('userLanguageIsSet');
+        return true;
+    };
+    
+    /**
+     * Sets the user country variable and cookie.
+     * @param {string} iso The two-letter country code
+     * @return {Boolean} True if country was set or false.
+     */
+    geo.setUserCountry = function(iso) {
+        if(iso.length !== 2) {
+            return false;
+        }
+        geo.country = iso.toUpperCase();
+        stc.util.setCookie('stc_country', stc.geo.country, 2);
+        stc.util.createEvent('countryIsSet');
+        return true;
+    };
 
     /**
      * Gets the language of the page
@@ -274,7 +334,6 @@ var stc = stc || {};
 
 }(stc.geo = stc.geo || {}, jQuery));
 
-
 var stc = stc || {};
 (function(geo, $){
     
@@ -282,157 +341,228 @@ var stc = stc || {};
      * List of Member countries and their website URLs
      */
     geo.members = {
-        AO: {
-            iso: "AO",
-            title: "Australia",
-            url: "http://www.savethechildren.org.au/"
+        "AU": {
+            "iso": "AU",
+            "title": "Australia",
+            "url": "http://www.savethechildren.org.au",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        CA: {
-            iso: "CA",
-            title: "Canada",
-            url: "http://www.savethechildren.ca"
+        "CA": {
+            "iso": "CA",
+            "title": "Canada",
+            "url": "http://www.savethechildren.ca",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        DK: {
-            iso: "DK",
-            title: "Denmark",
-            url: "http://www.redbarnet.dk/"
+        "DK": {
+            "iso": "DK",
+            "title": "Denmark",
+            "url": "http://www.redbarnet.dk",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        DO: {
-            iso: "DO",
-            title: "Dominican Republic",
-            url: "http://savethechildren.org.do/"
+        "DO": {
+            "iso": "DO",
+            "title": "Dominican Republic",
+            "url": "http://savethechildren.org.do",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        FJ: {
-            iso: "FJ",
-            title: "Fiji",
-            url: "http://www.savethechildren.org.fj"
+        "FJ": {
+            "iso": "FJ",
+            "title": "Fiji",
+            "url": "http://www.savethechildren.org.fj",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        FI: {
-            iso: "FI",
-            title: "Finland",
-            url: "http://www.pelastakaalapset.fi/"
+        "FI": {
+            "iso": "FI",
+            "title": "Finland",
+            "url": "http://www.pelastakaalapset.fi",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        DE: {
-            iso: "DE",
-            title: "Germany",
-            url: "http://www.savethechildren.de/"
+        "DE": {
+            "iso": "DE",
+            "title": "Germany",
+            "url": "http://www.savethechildren.de",
+            "mappedCountries": ["AT"],
+            "supportedLanguages": []
         },
-        HN: {
-            iso: "HN",
-            title: "Honduras",
-            url: "http://www.savethechildrenhonduras.org/"
+        "HN": {
+            "iso": "HN",
+            "title": "Honduras",
+            "url": "http://www.savethechildrenhonduras.org",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        HK: {
-            iso: "HK",
-            title: "Hong Kong",
-            url: "http://www.savethechildren.org.hk"
+        "HK": {
+            "iso": "HK",
+            "title": "Hong Kong",
+            "url": "http://www.savethechildren.org.hk",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        IS: {
-            iso: "IS",
-            title: "Iceland",
-            url: "http://www.barnaheill.is"
+        "IS": {
+            "iso": "IS",
+            "title": "Iceland",
+            "url": "http://www.barnaheill.is",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        IN: {
-            iso: "IN",
-            title: "India",
-            url: "http://www.savethechildren.in/"
+        "IN": {
+            "iso": "IN",
+            "title": "India",
+            "url": "http://www.savethechildren.in",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        IT: {
-            iso: "IT",
-            title: "Italy",
-            url: "http://www.savethechildren.it"
+        "IT": {
+            "iso": "IT",
+            "title": "Italy",
+            "url": "http://www.savethechildren.it",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        JP: {
-            iso: "JP",
-            title: "Japan",
-            url: "http://www.savechildren.or.jp"
+        "JP": {
+            "iso": "JP",
+            "title": "Japan",
+            "url": "http://www.savechildren.or.jp",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        JO: {
-            iso: "JO",
-            title: "Jordan",
-            url: "http://jordan.savethechildren.net"
+        "JO": {
+            "iso": "JO",
+            "title": "Jordan",
+            "url": "http://jordan.savethechildren.net",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        KR: {
-            iso: "KR",
-            title: "Korea",
-            url: "http://www.sc.or.kr"
+        "KR": {
+            "iso": "KR",
+            "title": "Korea",
+            "url": "http://www.sc.or.kr",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        LT: {
-            iso: "LT",
-            title: "Lithuania",
-            url: "https://www.gelbekitvaikus.lt"
+        "LT": {
+            "iso": "LT",
+            "title": "Lithuania",
+            "url": "https://www.gelbekitvaikus.lt",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        MX: {
-            iso: "MX",
-            title: "Mexico",
-            url: "https://www.savethechildren.mx/"
+        "MX": {
+            "iso": "MX",
+            "title": "Mexico",
+            "url": "https://www.savethechildren.mx",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        NL: {
-            iso: "NL",
-            title: "Netherlands",
-            url: "https://www.savethechildren.nl"
+        "NL": {
+            "iso": "NL",
+            "title": "Netherlands",
+            "url": "https://www.savethechildren.nl",
+            "mappedCountries": ["BE"],
+            "supportedLanguages": []
         },
-        NZ: {
-            iso: "NZ",
-            title: "New Zealand",
-            url: "http://www.savethechildren.org.nz"
+        "NZ": {
+            "iso": "NZ",
+            "title": "New Zealand",
+            "url": "http://www.savethechildren.org.nz",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        NO: {
-            iso: "NO",
-            title: "Norway",
-            url: "http://www.reddbarna.no"
+        "NO": {
+            "iso": "NO",
+            "title": "Norway",
+            "url": "http://www.reddbarna.no",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        RO: {
-            iso: "RO",
-            title: "Romania",
-            url: "http://www.salvaticopiii.ro"
+        "RO": {
+            "iso": "RO",
+            "title": "Romania",
+            "url": "http://www.salvaticopiii.ro",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        ZA: {
-            iso: "ZA",
-            title: "South Africa",
-            url: "http://www.savethechildren.org.za"
+        "ZA": {
+            "iso": "ZA",
+            "title": "South Africa",
+            "url": "http://www.savethechildren.org.za",
+            "mappedCountries": ["ZW", "NA"],
+            "supportedLanguages": []
         },
-        ES: {
-            iso: "ES",
-            title: "Spain",
-            url: "http://www.savethechildren.es"
+        "ES": {
+            "iso": "ES",
+            "title": "Spain",
+            "url": "http://www.savethechildren.es",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        SZ: {
-            iso: "SZ",
-            title: "Swaziland",
-            url: "http://www.savethechildren.org.sz"
+        "SZ": {
+            "iso": "SZ",
+            "title": "Swaziland",
+            "url": "http://www.savethechildren.org.sz",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        SE: {
-            iso: "SE",
-            title: "Sweden",
-            url: "http://www.rb.se"
+        "SE": {
+            "iso": "SE",
+            "title": "Sweden",
+            "url": "http://www.rb.se",
+            "mappedCountries": [],
+            "supportedLanguages": []
         },
-        CH: {
-            iso: "CH",
-            title: "Switzerland",
-            url: "http://www.savethechildren.ch"
+        "CH": {
+            "iso": "CH",
+            "title": "Switzerland",
+            "url": "http://www.savethechildren.ch",
+            "mappedCountries": ["LI"],
+            "supportedLanguages": []
         },
-        GB: {
-            iso: "GB",
-            title: "United Kingdom",
-            url: "http://www.savethechildren.org.uk"
+        "GB": {
+            "iso": "GB",
+            "title": "United Kingdom",
+            "url": "http://www.savethechildren.org.uk",
+            "mappedCountries": ["IE"],
+            "supportedLanguages": []
         },
-        US: {
-            iso: "US",
-            title: "United States",
-            url: "http://www.savethechildren.org"
+        "US": {
+            "iso": "US",
+            "title": "United States",
+            "url": "http://www.savethechildren.org",
+            "mappedCountries": [],
+            "supportedLanguages": []
         }
     };
     
     /**
-     * Redirects visitors to a Member website, defaults to current member country
-     * @param {object} [member = geo.memberCountry] The Member object to redirect to
+     * Redirects visitors to a Member website, defaults to current member country.
+     * @param {object} [member = geo.memberCountry] The Member object to redirect to.
+     * @return {boolean} True if redirection occurs or false.
      */
     geo.goToMemberSite = function(member) {
         member = member || geo.memberCountry;
-        if(typeof(member) !== "undefined" && typeof(member.url) !== "undefined") {
-            window.location = member.url;
+        if(typeof(member) === "undefined" || typeof(member.url) === "undefined") {
+            return false;
         }
+        window.location = member.url;
+        return true;
+    };
+    
+    /**
+     * Hides page content and attempts to redirect visitors to a Member website.
+     */
+    geo.goToMemberSiteOnLoad = function() {
+        stc.util.hideOnLoad();
+        window.addEventListener('countryIsSet', function() {
+            if(!geo.goToMemberSite()) {
+                stc.util.unhide();
+            }
+        });
     };
     
     /**
@@ -449,7 +579,7 @@ var stc = stc || {};
             });
         }
         //run the geo selection
-        geo.swapGeoAlternatives();
+        geo.swapGeoAlternatives(geo.country);
         //if the value is a url, then add an onchange redirect behaviour 
         if(/url/.test(attribute)) {
             $(select).on('change', function() {
@@ -504,7 +634,17 @@ var stc = stc || {};
      * Gets the user Member country object if it exists
      */ 
     window.addEventListener("countryIsSet", function(e) {
-        geo.memberCountry = stc.geo.members[geo.country];
+        geo.memberCountry = geo.members[geo.country];
+        //check for mapped countries and reset user country if applicable
+        if(typeof(geo.memberCountry) !== "object") {
+            $.each(geo.members, function(i,v) {
+                if($.inArray(geo.country, v.mappedCountries) > -1) {
+                    geo.memberCountry = v;
+                    geo.setUserCountry(v.iso);
+                    return false;
+                }
+            });
+        }
     });
     
 }(stc.geo = stc.geo || {}, jQuery));

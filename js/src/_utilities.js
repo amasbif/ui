@@ -107,6 +107,22 @@ var stc = stc || {};
         return urlParsingNode.cloneNode(false).href;
     };
     
+    /**
+     * Hides the HTML body on the page when the page loads. 
+     * Use when redirecting users.
+     */
+    util.hideOnLoad = function() {
+        $('body').hide();
+    };
+    
+    /**
+     * Shows the HTML body if the page content needs to be displayed. 
+     * Use when redirecting users is not possible and content must appear.
+     */
+    util.unhide = function() {
+        $('body').show();
+    };
+    
 }(stc.util = stc.util || {}, jQuery));
 
 

@@ -17,8 +17,8 @@ jQuery(function ($) {
     
     QUnit.test('Should create a Member country suggestion modal', function (assert) {
         assert.expect(1);
-        stc.util.setCookie("stc_suggest_denied", "0", 1);
-        stc.geo.suggestMemberSite(stc.geo.members.GB, $('#qunit-fixture'));
+        stc.util.setCookie("stc_suggest_denied", "0", -1);
+        stc.geo.suggestMemberSite(stc.geo.members.GB, $('#qunit-fixture'), -1);
         assert.ok($('.modal-body').text().indexOf(stc.geo.members.GB.title) > 1, "The modal window was opened and set to the right country");
         $('#memberSuggestModal').modal('hide');
     });

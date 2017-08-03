@@ -8452,3 +8452,7 @@ a {
     .stc-blocktitle.stc-blocktitle-nospan strong {
       font-weight: inherit;
       color: #DA291C; }
+
+.btn {
+  font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-transform: uppercase; }

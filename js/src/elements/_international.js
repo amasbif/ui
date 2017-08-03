@@ -21,6 +21,20 @@ var stc = stc || {};
             }
         });
     };
+    
+    /**
+     * Changes the href attribute of a given link to a country-specific link.
+     * @param {HTMLelement} linkElement The link element to modify.
+     * @param {object} countryLinks The list of country links in a JSON object. 
+     *   The object should have an iso  as key and url as value: {GB: '#urltoGB'}
+     * @return {Boolean} False if no country set or invalid input.
+     */
+    geo.changeCountryLink = function(linkElement, countryLinks) {
+        if(!geo.country || geo.country === "" || !countryLinks[stc.geo.country]) {
+            return false;
+        }
+        $(linkElement).attr('href', countryLinks[stc.geo.country]);
+    };
 
     /**
      * Locate the visitor by IP
@@ -88,6 +102,36 @@ var stc = stc || {};
         }
         return geo.userLanguage;
     };
+    
+    /**
+     * Sets the user language variable and cookie.
+     * @param {string} lng The two-letter language code
+     * @return {Boolean} True if country was set or false.
+     */
+    geo.setUserLanguage = function(lng) {
+        if(lng.length !== 2) {
+            return false;
+        }
+        geo.userLanguage = lng;
+        stc.util.setCookie('stc_user_language', geo.userLanguage, 2);
+        stc.util.createEvent('userLanguageIsSet');
+        return true;
+    };
+    
+    /**
+     * Sets the user country variable and cookie.
+     * @param {string} iso The two-letter country code
+     * @return {Boolean} True if country was set or false.
+     */
+    geo.setUserCountry = function(iso) {
+        if(iso.length !== 2) {
+            return false;
+        }
+        geo.country = iso.toUpperCase();
+        stc.util.setCookie('stc_country', stc.geo.country, 2);
+        stc.util.createEvent('countryIsSet');
+        return true;
+    };
 
     /**
      * Gets the language of the page
@@ -142,4 +186,3 @@ var stc = stc || {};
     });
 
 }(stc.geo = stc.geo || {}, jQuery));
-
