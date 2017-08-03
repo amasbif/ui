@@ -11,8 +11,8 @@ jQuery(function ($) {
         var $select = $(selectHTML).appendTo('#qunit-fixture');
         stc.geo.addMembersSelectOptions($select, 'url');
         assert.ok($('#qunit-fixture').find('select option').length > 1, 'country member options correctly added');
-        stc.geo.swapGeoAlternatives("GB");
-        assert.ok($('#qunit-fixture').find('select').val().indexOf('org.uk') > 1, 'Country Member URL correctly selected - ' + $('#qunit-fixture').find('select').val());
+        stc.geo.swapGeoAlternatives("US");
+        assert.ok($('#qunit-fixture').find('select').val().indexOf('.org') > 1, 'Country Member URL correctly selected - ' + $('#qunit-fixture').find('select').val());
     });
     
     QUnit.test('Should create a Member country suggestion modal', function (assert) {
