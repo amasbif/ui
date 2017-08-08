@@ -35,6 +35,16 @@
               </div>
             </form>
           </div>
+          <table class="table table-striped table-bordered hidden" id="propertyTable">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -44,9 +54,21 @@
       stc.geo.addMembersSelectOptions($('#countryDropDown'),'url');
       window.addEventListener('countryIsSet', function() {
         $(document).ready(function() {
-          stc.geo.suggestMemberSite(null, null, 0);
+          stc.geo.suggestMemberSite(null, null, 0); 
+          addParameters();
         });
       });
+      
+      function addParameters() {
+        var tbody = $('<tbody/>');
+        $(tbody).append('<tr><td>User country</td><td>' + stc.geo.country + '</td></tr>');
+        $(tbody).append('<tr><td>Member country</td><td>' + (stc.geo.memberCountry ? stc.geo.memberCountry.title : 'N/A') + '</td></tr>');
+        $(tbody).append('<tr><td>Member website URL</td><td>' + 
+                (stc.geo.memberCountry ? '<a href="' + stc.geo.memberCountry.url + '">' + stc.geo.memberCountry.url + '</a>' : 
+                'N/A') + '</td></tr>');
+        $(tbody).append('<tr><td>User language</td><td>' + stc.geo.userLanguage + '</td></tr>');
+        $('#propertyTable').removeClass('hidden').find('tbody').html(tbody.html());
+      }
     </script>
   </body>
 </html>

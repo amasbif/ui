@@ -146,6 +146,98 @@ var stc = stc || {};
  */
 
 var stc = stc || {};
+
+window.addEventListener('load', function(){
+    window.removeEventListener('load', false);
+    if(!window.ga || !ga.create) { 
+        return false;
+    }
+       
+    (function(analytics, ga, $){
+
+        /**
+         * Gets a GA property by wrapping ga.getAll();
+         * @param {string} property The properry to retrieve.
+         * @return {unresolved} The GA property if found.
+         */
+        analytics.getProperty = function(property) {
+            return ga.getAll()[0].get(property);
+        };
+        
+        analytics.trackingId = analytics.getProperty('trackingId');
+        
+        /**
+         * Registers a GA ecommerce transaction for a donation.
+         * 
+         * @param {string} trans_id The transaction ID.
+         * @param {string} item_name The product name.
+         * @param {string} item_sku The product SKU.
+         * @param {number} amount The donation amount.
+         * @return {undefined}
+         */
+        analytics.sendDonation = function(trans_id, item_name, item_sku, amount) {
+            if(!trans_id || !item_name || !item_sku || isNaN(amount)) {
+                return false;
+            }
+            ga('require', 'ecommerce');
+            ga('ecommerce:addTransaction', {
+                'id': trans_id,
+                'affiliation': stc.geo.t('Save the Children'),
+                'revenue': amount
+            });
+            ga('ecommerce:addItem', {
+                'id': trans_id,
+                'name': item_name,
+                'sku': item_sku,
+                'category': stc.geo.t('Donation'),
+                'price': amount,
+                'quantity': '1'
+            });
+            ga('ecommerce:send', {hitCallback: analytics.callback});
+        };
+        
+        /**
+         * Sends an event to GA.
+         * 
+         * @param {type} category The event category.
+         * @param {type} action The action to record.
+         * @param {type} [label] The event label.
+         * @return {undefined}
+         */
+        analytics.sendEvent = function (category, action, label) {
+            if(!category || !action || !label) {
+                return false;
+            }
+            ga('send', {
+                hitType: 'event',
+                eventCategory: category,
+                eventAction: action,
+                eventLabel: (label ? label : ''),
+                hitCallback: analytics.callback
+            });
+        };     
+        
+        /**
+         * Sends a page view to GA.
+         * 
+         * @param {string} [url] The path to record a view against.
+         *   Defaults to current path.
+         * @return {undefined}
+         */
+        analytics.sendPageView = function (url) {
+            var url = url || location.pathname;
+            ga('send', 'pageview', url, {hitCallback: analytics.callback});
+        };
+        
+        analytics.callback = function() {
+            analytics.lastEventTime = new Date().getTime();
+        };
+
+    }(stc.analytics = stc.analytics || {}, ga, jQuery));
+
+});
+
+var stc = stc || {};
 (function(geo, $){
 
     /**
@@ -158,16 +250,17 @@ var stc = stc || {};
                 $(v).siblings().filter('.stc-geo-alt').addClass('hidden');
                 $(v).removeClass('hidden');
             }
-        }); 
+        });
 
         //select default country in drop-down
+        $('select.stc-geo-select option').removeAttr('selected');
         $('select.stc-geo-select option').each(function(i,v) {
             if($(this).attr('data-geo') === country_code) {
                 $(this).attr('selected','selected');
                 return false;
             }
         });
-    };
+    }; 
     
     /**
      * Changes the href attribute of a given link to a country-specific link.
@@ -184,12 +277,12 @@ var stc = stc || {};
     };
 
     /**
-     * Locate the visitor by IP
+     * Locate the visitor by IP.
      * 
      * @desc Uses Skype API to retrieve user's country ISO code and set a country cookie.
      * Falls back to using CloudFlare geo location service exposed on www.savethechildren.net
      * 
-     * @return {string} 2-letter country ISO codde (if set)
+     * @return {string} 2-letter country ISO code (if set)
      */
     geo.locate = function() {
         stc.geo.country = "";
@@ -252,17 +345,20 @@ var stc = stc || {};
     
     /**
      * Sets the user language variable and cookie.
-     * @param {string} lng The two-letter language code
-     * @return {Boolean} True if country was set or false.
+     * @param {string} [lng] The two-letter language code. 
+     * Defaults to the main browser language or the user-set value if present.
+     * @return {String} The language code.
      */
     geo.setUserLanguage = function(lng) {
-        if(lng.length !== 2) {
+        if(!lng) {
+            var lng = stc.util.getCookie('stc_user_language') || (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage));
+        }
+        if(lng.length < 2) {
             return false;
         }
+        stc.util.setCookie('stc_user_language', lng, 2);
         geo.userLanguage = lng;
-        stc.util.setCookie('stc_user_language', geo.userLanguage, 2);
-        stc.util.createEvent('userLanguageIsSet');
-        return true;
+        return lng;
     };
     
     /**
@@ -320,13 +416,11 @@ var stc = stc || {};
         }
     };
     
-    
-    
-    //locate on load
-    stc.geo.locate();
-    
-    //language on load
-    stc.geo.getUserLanguage();
+    /* Initialise some variables on page load */
+    $(function() {
+        geo.locate();
+        geo.setUserLanguage();
+    });
     
     window.addEventListener("countryIsSet", function(e) { 
         stc.geo.swapGeoAlternatives(stc.geo.country);
@@ -654,6 +748,7 @@ var stc = stc || {};
 (function(video, $){
     /**
      * Gets a YouTube video ID from a given YouTube URL.
+     * 
      * @param {string} url The URL of the YouTube video
      * @return {String} The YouTube video ID
      */
@@ -670,6 +765,7 @@ var stc = stc || {};
 
     /**
      * Builds the YouTube embed code from a given video ID.
+     * 
      * @param {String} vid The YouTuve video ID
      * @return {String} the YouTube embed code
      */
@@ -689,13 +785,17 @@ var stc = stc || {};
     */
     $(function ($) {
         $('.stc-yt a').click(function(e) {
+            var ytsrc = $(this).attr('href');
+            var ytid = stc.video.getYtId(ytsrc);
+            //try to add GA event
+            if(stc.analytics) {
+                stc.analytics.sendEvent('Videos', 'Play', ytid);
+            }
             //on mobiles open video directly
             if(!stc.util.isMobile) {
                 e.preventDefault();
-                var ytsrc = $(this).attr('href');
-                var ytid = stc.video.getYtId(ytsrc);
-                ytsrc = stc.video.buildYtEmbed(ytid);
                 var ytframe = $('<iframe/>');
+                ytsrc = stc.video.buildYtEmbed(ytid);
                 $(ytframe).attr('src', ytsrc);
                 $(this).fadeOut(500, function() {
                     $(ytframe).appendTo($(this).parent()).fadeIn();
@@ -703,6 +803,7 @@ var stc = stc || {};
             }
         });
     });
+    
 }(stc.video = stc.video || {}, jQuery));
 
 /*!

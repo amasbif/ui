@@ -1,7 +1,15 @@
 jQuery(function ($) {
     
     QUnit.test('should return a valid country code for the user', function (assert) {
-        assert.ok(/^[A-Z][A-Z]$/.test(stc.geo.country));
+        if(stc.geo.country) {
+            assert.ok(/^[A-Z][A-Z]$/.test(stc.geo.country));
+            return true;
+        }
+        var done = assert.async();
+        window.addEventListener('countryIsSet', function() {
+            assert.ok(/^[A-Z][A-Z]$/.test(stc.geo.country));
+            done();
+        });
     });
     
     QUnit.test('should select the right country option', function (assert) {
@@ -27,7 +35,7 @@ jQuery(function ($) {
     
     QUnit.test('Should return a valid user language', function (assert) {
         assert.expect(2);
-        assert.ok(/^[a-z][a-z]$/.test(stc.geo.userLanguage), "The user language is valid");
+        assert.ok(/^[a-z][a-z]((-|_)[A-Z][A-Z])?$/.test(stc.geo.userLanguage), "The user language is valid");
         assert.equal(stc.geo.pageLanguage, "en", "Page language is English");
     });
     

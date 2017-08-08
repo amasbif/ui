@@ -3,6 +3,7 @@ var stc = stc || {};
 (function(video, $){
     /**
      * Gets a YouTube video ID from a given YouTube URL.
+     * 
      * @param {string} url The URL of the YouTube video
      * @return {String} The YouTube video ID
      */
@@ -19,6 +20,7 @@ var stc = stc || {};
 
     /**
      * Builds the YouTube embed code from a given video ID.
+     * 
      * @param {String} vid The YouTuve video ID
      * @return {String} the YouTube embed code
      */
@@ -38,13 +40,17 @@ var stc = stc || {};
     */
     $(function ($) {
         $('.stc-yt a').click(function(e) {
+            var ytsrc = $(this).attr('href');
+            var ytid = stc.video.getYtId(ytsrc);
+            //try to add GA event
+            if(stc.analytics) {
+                stc.analytics.sendEvent('Videos', 'Play', ytid);
+            }
             //on mobiles open video directly
             if(!stc.util.isMobile) {
                 e.preventDefault();
-                var ytsrc = $(this).attr('href');
-                var ytid = stc.video.getYtId(ytsrc);
-                ytsrc = stc.video.buildYtEmbed(ytid);
                 var ytframe = $('<iframe/>');
+                ytsrc = stc.video.buildYtEmbed(ytid);
                 $(ytframe).attr('src', ytsrc);
                 $(this).fadeOut(500, function() {
                     $(ytframe).appendTo($(this).parent()).fadeIn();
@@ -52,4 +58,5 @@ var stc = stc || {};
             }
         });
     });
+    
 }(stc.video = stc.video || {}, jQuery));
