@@ -69,42 +69,73 @@ var stc = stc || {};
     };
     
     /**
-     * Checks if a given URL is local or external
+     * Parses a given URL to extract its attributes.
+     * 
+     * @param {string} url The URL to be parsed.
+     * @return {object} The parsed URL object.
+     * @see https://github.com/angular/angular.js/blob/v1.4.4/src/ng/urlUtils.js
+     */
+    util.parseUrl = function (url) {
+        var urlParsingNode = document.createElement("a");
+        var href = url;
+
+        if (util.msie) {
+            // Normalize before parse.  Refer Implementation Notes on why this is
+            // done in two steps on IE.
+            urlParsingNode.setAttribute("href", href);
+            href = urlParsingNode.href;
+        }
+
+        urlParsingNode.setAttribute('href', href);
+
+        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+        return {
+            href: urlParsingNode.href,
+            protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+            host: urlParsingNode.host,
+            search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+            hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+            hostname: urlParsingNode.hostname,
+            port: urlParsingNode.port,
+            pathname: (urlParsingNode.pathname.charAt(0) === '/')
+                ? urlParsingNode.pathname
+                : '/' + urlParsingNode.pathname
+        };
+    };
+    
+    /**
+     * Checks if a given URL is local or external.
      * @param {string} url The url to test
      * @return {Boolean} True if local or false
      */
     util.isLocalUrl = function(url) {
-        if(!/^(?:[a-z]+:)?\/\//.test(url)) {
-            return true;
-        }
-        var currentDomain = window.location.hostname;
-        return url.indexOf(currentDomain) !== -1;
+        var parsedUrl = util.parseUrl(url);
+        return parsedUrl.hostname === window.location.hostname;
+    };
+    
+    /* list of extensions associated with file downloads */
+    util.fileDownloadExt = ['pdf', 'doc', 'docx', 'xlsx', 'rtf', 'xls', 'csv'];
+    
+    /**
+     * Checks if a given URL is a file download.
+     * 
+     * @param {string} url The url to test
+     * @return {Boolean} True if file or false
+     */
+    util.isFileUrl = function(url) {
+        var pattern = new RegExp('.+\\.(' + util.fileDownloadExt.join('|') + ')((\\?|#).+)?$', 'i');
+        return pattern.test(url);
     };
     
     /**
     * Returns the passed in URL as an absolute URL.
     *
-    * @param {string} url
-    *   The URL string to be normalized to an absolute URL.
-    *
-    * @return {Boolean}
-    *   The normalized, absolute URL.
-    *
-    * @see https://github.com/angular/angular.js/blob/v1.4.4/src/ng/urlUtils.js
-    * @see https://grack.com/blog/2009/11/17/absolutizing-url-in-javascript
-    * @see https://github.com/jquery/jquery-ui/blob/1.11.4/ui/tabs.js#L53
+    * @param {string} url The URL string to be normalized to an absolute URL.
+    * @return {string} The normalized, absolute URL.
     */
     util.absoluteUrl = function(url) {
-        var urlParsingNode = document.createElement('a');
-        // Decode the URL first; this is required by IE <= 6. Decoding non-UTF-8
-        // strings may throw an exception.
-        try {
-            url = decodeURIComponent(url);
-        } catch (e) {}
-        urlParsingNode.setAttribute('href', url);
-        // IE <= 7 normalizes the URL when assigned to the anchor node similar to
-        // the other browsers.
-        return urlParsingNode.cloneNode(false).href;
+        var parsedUrl = util.parseUrl(url);
+        return parsedUrl.href;
     };
     
     /**
@@ -122,6 +153,10 @@ var stc = stc || {};
     util.unhide = function() {
         $('body').show();
     };
+    
+    /* checks if the browser is Internet Explorer */
+    util.msie = ~window.navigator.userAgent.indexOf('MSIE ') 
+            || ~window.navigator.userAgent.indexOf('Trident/');
     
 }(stc.util = stc.util || {}, jQuery));
 
@@ -148,7 +183,7 @@ var stc = stc || {};
 var stc = stc || {};
 
 window.addEventListener('load', function(){
-    window.removeEventListener('load', false);
+    window.removeEventListener('load', this, false);
     if(!window.ga || !ga.create) { 
         return false;
     }
@@ -193,8 +228,14 @@ window.addEventListener('load', function(){
                 'price': amount,
                 'quantity': '1'
             });
-            ga('ecommerce:send', {hitCallback: analytics.callback});
+            ga('ecommerce:send');
         };
+        
+        /* Check if a transaction object exists on the page and send it to ga */
+        if(analytics.donation && analytics.donation.trans_id) {
+            var params = Object.keys(analytics.donation).map(function (key) { return analytics.donation[key]; });
+            analytics.sendDonation.apply(this, params);
+        }
         
         /**
          * Sends an event to GA.
@@ -215,7 +256,7 @@ window.addEventListener('load', function(){
                 eventLabel: (label ? label : ''),
                 hitCallback: analytics.callback
             });
-        };     
+        };
         
         /**
          * Sends a page view to GA.
@@ -229,9 +270,35 @@ window.addEventListener('load', function(){
             ga('send', 'pageview', url, {hitCallback: analytics.callback});
         };
         
+        /* Callback is only used for unit testing */
         analytics.callback = function() {
             analytics.lastEventTime = new Date().getTime();
         };
+        
+        /* Add some default event tracking on DOM ready */
+        $(function() {
+            /* Track events on buttons with a data-event attribute */
+            $('button[data-event]').on('click', function() {
+                analytics.sendEvent($(this).attr('data-event'), 'click', $(this).text());
+            });
+            
+            /* Track events for custom event, outbound and download links */
+            $('a').on('click', function() {
+                var url = $(this).attr('href');
+                // Custom event is specified in data-event
+                if($(this).attr('data-event')) {
+                    analytics.sendEvent($(this).attr('data-event'), 'click', url);
+                }
+                // Link is a file download
+                else if (stc.util.isFileUrl(url)) {
+                    analytics.sendEvent('Download', 'click', url);
+                }
+                // Link is outbound
+                else if(!stc.util.isLocalUrl(url)) {
+                    analytics.sendEvent('Outbound link', 'click', url);
+                }
+            });
+        });
 
     }(stc.analytics = stc.analytics || {}, ga, jQuery));
 

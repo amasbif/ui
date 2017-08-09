@@ -44,7 +44,24 @@
             <li>
               <a href="javascript:stc.analytics.sendDonation('1234', 'test donation', 'test_sku', 9.99)">Send transaction</a>
             </li>
+            <li>
+              <a target="_blank" href="/test.pdf#page=1">Download link</a>
+            </li>
+            <li>
+              <a target="_blank" href="http://www.savethechildren.org.uk">Outbound link</a>
+            </li>
           </ul>
+          <script>
+            //inline donation object to be sent on page load
+            var stc = stc || {};
+            stc.analytics = stc.analyics || {};
+            stc.analytics.donation = {
+              trans_id: Math.floor(Math.random() * 2000),
+              item_name: 'test donation',
+              item_sku: 'test_sku',
+              amount: 9.99
+            };
+          </script>
         </div>
       </div>
     </div>

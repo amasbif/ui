@@ -1,7 +1,7 @@
 var stc = stc || {};
 
 window.addEventListener('load', function(){
-    window.removeEventListener('load', false);
+    window.removeEventListener('load', this, false);
     if(!window.ga || !ga.create) { 
         return false;
     }
@@ -46,8 +46,14 @@ window.addEventListener('load', function(){
                 'price': amount,
                 'quantity': '1'
             });
-            ga('ecommerce:send', {hitCallback: analytics.callback});
+            ga('ecommerce:send');
         };
+        
+        /* Check if a transaction object exists on the page and send it to ga */
+        if(analytics.donation && analytics.donation.trans_id) {
+            var params = Object.keys(analytics.donation).map(function (key) { return analytics.donation[key]; });
+            analytics.sendDonation.apply(this, params);
+        }
         
         /**
          * Sends an event to GA.
@@ -68,7 +74,7 @@ window.addEventListener('load', function(){
                 eventLabel: (label ? label : ''),
                 hitCallback: analytics.callback
             });
-        };     
+        };
         
         /**
          * Sends a page view to GA.
@@ -82,9 +88,35 @@ window.addEventListener('load', function(){
             ga('send', 'pageview', url, {hitCallback: analytics.callback});
         };
         
+        /* Callback is only used for unit testing */
         analytics.callback = function() {
             analytics.lastEventTime = new Date().getTime();
         };
+        
+        /* Add some default event tracking on DOM ready */
+        $(function() {
+            /* Track events on buttons with a data-event attribute */
+            $('button[data-event]').on('click', function() {
+                analytics.sendEvent($(this).attr('data-event'), 'click', $(this).text());
+            });
+            
+            /* Track events for custom event, outbound and download links */
+            $('a').on('click', function() {
+                var url = $(this).attr('href');
+                // Custom event is specified in data-event
+                if($(this).attr('data-event')) {
+                    analytics.sendEvent($(this).attr('data-event'), 'click', url);
+                }
+                // Link is a file download
+                else if (stc.util.isFileUrl(url)) {
+                    analytics.sendEvent('Download', 'click', url);
+                }
+                // Link is outbound
+                else if(!stc.util.isLocalUrl(url)) {
+                    analytics.sendEvent('Outbound link', 'click', url);
+                }
+            });
+        });
 
     }(stc.analytics = stc.analytics || {}, ga, jQuery));
 
