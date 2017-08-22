@@ -210,7 +210,7 @@ var stc = stc || {};
      */
     geo.goToMemberSite = function(member) {
         member = member || geo.memberCountry;
-        if(typeof(member) === "undefined" || typeof(member.url) === "undefined") {
+        if(typeof member === "undefined" || typeof member.url === "undefined") {
             return false;
         }
         window.location = member.url;
@@ -267,7 +267,7 @@ var stc = stc || {};
         if(days !== 0 ) {
             days = days || 1;
         }
-        if(typeof(member) !== "undefined" && typeof(member.url) !== "undefined" && stc.util.getCookie('stc_suggest_denied') !== "1") {
+        if(typeof member !== "undefined" && typeof member.url !== "undefined" && stc.util.getCookie('stc_suggest_denied') !== "1") {
             var modal = $('<div/>').attr({id:'memberSuggestModal', class: 'modal fade', role: 'dialog', 'tab-index': '-1'})
                 .append($('<div/>').attr({class:'modal-dialog', role: 'document'})
                     .append($('<div/>').attr({class:'modal-content'})
@@ -300,7 +300,7 @@ var stc = stc || {};
     window.addEventListener("countryIsSet", function(e) {
         geo.memberCountry = geo.members[geo.country];
         //check for mapped countries and reset user country if applicable
-        if(typeof(geo.memberCountry) !== "object") {
+        if(typeof geo.memberCountry !== "object") {
             $.each(geo.members, function(i,v) {
                 if($.inArray(geo.country, v.mappedCountries) > -1) {
                     geo.memberCountry = v;

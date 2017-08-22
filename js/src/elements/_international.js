@@ -112,7 +112,7 @@ var stc = stc || {};
      */
     geo.setUserLanguage = function(lng) {
         if(!lng) {
-            var lng = stc.util.getCookie('stc_user_language') || (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage));
+            var lng = stc.util.getCookie('stc_user_language') || (navigator.languages ? navigator.languages[0] : navigator.language || navigator.userLanguage);
         }
         if(lng.length < 2) {
             return false;
@@ -166,7 +166,7 @@ var stc = stc || {};
         }
         //try to get language localized strings object
         var strings = geo.strings[lang];
-        if(!strings || typeof(strings) !== 'object') {
+        if(!strings || typeof strings !== 'object') {
             return original;
         }
         if(!strings[original] || strings[original] === "") {

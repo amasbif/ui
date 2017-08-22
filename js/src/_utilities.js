@@ -139,6 +139,57 @@ var stc = stc || {};
     };
     
     /**
+     * Adds utm code from the current URL to any given URL;
+     * @param {string} url The URL to add utm code to.
+     * @return {string} The updated URL.
+     */
+    util.forwardUTM = function(url) {
+        var params = util.parseUrlParams();
+        if(!params) {
+            return url;
+        }
+        var urlParsingNode = document.createElement("a");
+        var href = url;
+        if (util.msie) {
+            urlParsingNode.setAttribute("href", href);
+            href = urlParsingNode.href;
+        }
+        urlParsingNode.setAttribute('href', href);
+        
+        var queryString = "";
+        $.each(params, function(i,v) {
+            if(/^utm_/.test(i)) {    
+                queryString += "&" + i + "=" + v;
+            }
+        });
+        if(urlParsingNode.search) {
+            urlParsingNode.search += queryString;
+        }
+        else {
+            urlParsingNode.search = "?" + queryString.substr(1);
+        }
+        return urlParsingNode.href; 
+    }; 
+
+    /**
+     * Parses the current URL search string into key value pairs.
+     * 
+     * @return {object} The key/value pairs of URL paramaters.
+     */
+    util.parseUrlParams = function() {
+        if(!location.search) {
+            return false;
+        }
+        var parsedParameters = {};
+        var uriParameters = location.search.substr(1).split('&');
+        $.each(uriParameters, function(i,v) {
+            var parameter = v.split('=');
+            parsedParameters[parameter[0]] = decodeURIComponent(parameter[1]);
+        });
+        return parsedParameters;
+    };
+    
+    /**
      * Hides the HTML body on the page when the page loads. 
      * Use when redirecting users.
      */

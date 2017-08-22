@@ -139,6 +139,57 @@ var stc = stc || {};
     };
     
     /**
+     * Adds utm code from the current URL to any given URL;
+     * @param {string} url The URL to add utm code to.
+     * @return {string} The updated URL.
+     */
+    util.forwardUTM = function(url) {
+        var params = util.parseUrlParams();
+        if(!params) {
+            return url;
+        }
+        var urlParsingNode = document.createElement("a");
+        var href = url;
+        if (util.msie) {
+            urlParsingNode.setAttribute("href", href);
+            href = urlParsingNode.href;
+        }
+        urlParsingNode.setAttribute('href', href);
+        
+        var queryString = "";
+        $.each(params, function(i,v) {
+            if(/^utm_/.test(i)) {    
+                queryString += "&" + i + "=" + v;
+            }
+        });
+        if(urlParsingNode.search) {
+            urlParsingNode.search += queryString;
+        }
+        else {
+            urlParsingNode.search = "?" + queryString.substr(1);
+        }
+        return urlParsingNode.href; 
+    }; 
+
+    /**
+     * Parses the current URL search string into key value pairs.
+     * 
+     * @return {object} The key/value pairs of URL paramaters.
+     */
+    util.parseUrlParams = function() {
+        if(!location.search) {
+            return false;
+        }
+        var parsedParameters = {};
+        var uriParameters = location.search.substr(1).split('&');
+        $.each(uriParameters, function(i,v) {
+            var parameter = v.split('=');
+            parsedParameters[parameter[0]] = decodeURIComponent(parameter[1]);
+        });
+        return parsedParameters;
+    };
+    
+    /**
      * Hides the HTML body on the page when the page loads. 
      * Use when redirecting users.
      */
@@ -418,7 +469,7 @@ var stc = stc || {};
      */
     geo.setUserLanguage = function(lng) {
         if(!lng) {
-            var lng = stc.util.getCookie('stc_user_language') || (navigator.languages ? navigator.languages[0] : (navigator.language || navigator.userLanguage));
+            var lng = stc.util.getCookie('stc_user_language') || (navigator.languages ? navigator.languages[0] : navigator.language || navigator.userLanguage);
         }
         if(lng.length < 2) {
             return false;
@@ -472,7 +523,7 @@ var stc = stc || {};
         }
         //try to get language localized strings object
         var strings = geo.strings[lang];
-        if(!strings || typeof(strings) !== 'object') {
+        if(!strings || typeof strings !== 'object') {
             return original;
         }
         if(!strings[original] || strings[original] === "") {
@@ -707,7 +758,7 @@ var stc = stc || {};
      */
     geo.goToMemberSite = function(member) {
         member = member || geo.memberCountry;
-        if(typeof(member) === "undefined" || typeof(member.url) === "undefined") {
+        if(typeof member === "undefined" || typeof member.url === "undefined") {
             return false;
         }
         window.location = member.url;
@@ -764,7 +815,7 @@ var stc = stc || {};
         if(days !== 0 ) {
             days = days || 1;
         }
-        if(typeof(member) !== "undefined" && typeof(member.url) !== "undefined" && stc.util.getCookie('stc_suggest_denied') !== "1") {
+        if(typeof member !== "undefined" && typeof member.url !== "undefined" && stc.util.getCookie('stc_suggest_denied') !== "1") {
             var modal = $('<div/>').attr({id:'memberSuggestModal', class: 'modal fade', role: 'dialog', 'tab-index': '-1'})
                 .append($('<div/>').attr({class:'modal-dialog', role: 'document'})
                     .append($('<div/>').attr({class:'modal-content'})
@@ -797,7 +848,7 @@ var stc = stc || {};
     window.addEventListener("countryIsSet", function(e) {
         geo.memberCountry = geo.members[geo.country];
         //check for mapped countries and reset user country if applicable
-        if(typeof(geo.memberCountry) !== "object") {
+        if(typeof geo.memberCountry !== "object") {
             $.each(geo.members, function(i,v) {
                 if($.inArray(geo.country, v.mappedCountries) > -1) {
                     geo.memberCountry = v;
