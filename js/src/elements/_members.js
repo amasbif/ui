@@ -205,15 +205,19 @@ var stc = stc || {};
     
     /**
      * Redirects visitors to a Member website, defaults to current member country.
+     * 
      * @param {object} [member = geo.memberCountry] The Member object to redirect to.
+     * @param {object} [options] The optional parameters to pass to util.goToUrl().
      * @return {boolean} True if redirection occurs or false.
      */
-    geo.goToMemberSite = function(member) {
+    geo.goToMemberSite = function(member, options) {
         member = member || geo.memberCountry;
+        options = options || {};
         if(typeof member === "undefined" || typeof member.url === "undefined") {
             return false;
         }
-        window.location = member.url;
+        options.eventLabel = member.iso + " - " + member.url;
+        stc.util.goToUrl(member.url, options);
         return true;
     };
     
@@ -222,8 +226,9 @@ var stc = stc || {};
      */
     geo.goToMemberSiteOnLoad = function() {
         stc.util.hideOnLoad();
-        window.addEventListener('countryIsSet', function() {
-            if(!geo.goToMemberSite()) {
+        //wait for load event as well so that GA is available.
+        stc.util.listenToMultiEvents(['load','countryIsSet'], 'redirectOnLoad',function() {
+            if(!geo.goToMemberSite(null, {redirect: true, eventAction: 'Redirect'})) {
                 stc.util.unhide();
             }
         });
@@ -247,7 +252,10 @@ var stc = stc || {};
         //if the value is a url, then add an onchange redirect behaviour 
         if(/url/.test(attribute)) {
             $(select).on('change', function() {
-                window.location = $(this).val();
+                stc.util.goToUrl($(this).val(), {eventLabel: $(this).find('option:selected').attr('data-geo') + " - " + $(this).val()});
+            }).closest('form').on('submit', function(e) {
+                e.preventDefault();
+                stc.util.goToUrl($(select).val());
             });
         }
     };
@@ -259,7 +267,7 @@ var stc = stc || {};
      * @param {HTMLElement} [element = body]
      *   The HTML element to place the modal window in. Defaults to body.
      * @param {int} [days = 1]
-     *   The number of days to remember the visitor choice (if they choose to stay). Defaults to 1 day.
+     *   The number of days to remember the visitor's choice (if they choose to stay). Defaults to 1 day.
      */
     geo.suggestMemberSite = function(member, element, days) {
         member = member || geo.memberCountry;

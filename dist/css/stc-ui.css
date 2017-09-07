@@ -8379,6 +8379,9 @@ a {
   transition-duration: 250ms;
   transition-timing-function: ease; }
 
+.no-js .js-only {
+  display: none; }
+
 .stc-yt {
   position: relative;
   background: #000; }
@@ -8456,3 +8459,26 @@ a {
 .btn {
   font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase; }
+
+.stc-loader {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #DA291C; }
+  .stc-loader .stc-loader-inner {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3em;
+    width: 3em;
+    margin: auto; }

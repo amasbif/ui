@@ -31,10 +31,10 @@ var stc = stc || {};
      * @return {Boolean} False if no country set or invalid input.
      */
     geo.changeCountryLink = function(linkElement, countryLinks) {
-        if(!geo.country || geo.country === "" || !countryLinks[stc.geo.country]) {
+        if(!geo.country || geo.country === "" || !countryLinks[geo.country]) {
             return false;
         }
-        $(linkElement).attr('href', countryLinks[stc.geo.country]);
+        $(linkElement).attr('href', countryLinks[geo.country]);
     };
 
     /**

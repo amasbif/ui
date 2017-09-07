@@ -24,6 +24,7 @@ var stc = stc || {};
     
     /**
      * Sets a cookie.
+     * 
      * @param {String} cname Name of the cookie
      * @param {String} cvalue Value of the cookie
      * @param {Int} exdays Number of days the cookie will last
@@ -37,6 +38,7 @@ var stc = stc || {};
 
     /**
      * Gets a cookie.
+     * 
      * @param {String} cname The name of the cookie to retrieve
      * @return {String} The value of the cookie
      */
@@ -76,17 +78,8 @@ var stc = stc || {};
      * @see https://github.com/angular/angular.js/blob/v1.4.4/src/ng/urlUtils.js
      */
     util.parseUrl = function (url) {
-        var urlParsingNode = document.createElement("a");
-        var href = url;
-
-        if (util.msie) {
-            // Normalize before parse.  Refer Implementation Notes on why this is
-            // done in two steps on IE.
-            urlParsingNode.setAttribute("href", href);
-            href = urlParsingNode.href;
-        }
-
-        urlParsingNode.setAttribute('href', href);
+       
+        var urlParsingNode = util.loadUrlNode(url);
 
         // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
         return {
@@ -104,7 +97,27 @@ var stc = stc || {};
     };
     
     /**
+     * Loads the URL into an anchor DOM element.
+     * 
+     * @param {string} url The URL to parse.
+     * @return {Element} The anchor element.
+     */
+    util.loadUrlNode = function(url) {
+        var urlParsingNode = document.createElement("a");
+        var href = url;
+        if (util.msie) {
+            // Normalize before parse.  Refer Implementation Notes on why this is
+            // done in two steps on IE.
+            urlParsingNode.setAttribute("href", href);
+            href = urlParsingNode.href;
+        }
+        urlParsingNode.setAttribute('href', href);
+        return urlParsingNode;
+    };
+    
+    /**
      * Checks if a given URL is local or external.
+     * 
      * @param {string} url The url to test
      * @return {Boolean} True if local or false
      */
@@ -140,21 +153,16 @@ var stc = stc || {};
     
     /**
      * Adds utm code from the current URL to any given URL;
+     * 
      * @param {string} url The URL to add utm code to.
      * @return {string} The updated URL.
      */
     util.forwardUTM = function(url) {
         var params = util.parseUrlParams();
-        if(!params) {
+        if(jQuery.isEmptyObject(params)) {
             return url;
         }
-        var urlParsingNode = document.createElement("a");
-        var href = url;
-        if (util.msie) {
-            urlParsingNode.setAttribute("href", href);
-            href = urlParsingNode.href;
-        }
-        urlParsingNode.setAttribute('href', href);
+        var urlParsingNode = util.loadUrlNode(url);
         
         var queryString = "";
         $.each(params, function(i,v) {
@@ -169,24 +177,78 @@ var stc = stc || {};
             urlParsingNode.search = "?" + queryString.substr(1);
         }
         return urlParsingNode.href; 
-    }; 
+    };
+    
+    /**
+     * Adds UTM tracking code to a given URL.
+     * 
+     * @param {string} url The URL to add tracking to.
+     * @param {string} source The UTM source.
+     * @param {string} medium The UTM medium.
+     * @param {string} campaign The UTM campaign.
+     * @return {string} The updated URL.
+     */
+    util.addUTM = function(url, source, medium, campaign) {
+        var params = util.parseUrlParams(url);
+        if(params.utm_source) {
+            return url;
+        }
+        var urlParsingNode = util.loadUrlNode(url);
+
+        var queryString = "&utm_source=" + source + "&utm_medium=" + medium + "&utm_campaign=" + campaign;
+        if(urlParsingNode.search) {
+            urlParsingNode.search += queryString;
+        }
+        else {
+            urlParsingNode.search = "?" + queryString.substr(1);
+        }
+        return urlParsingNode.href;
+    };
 
     /**
      * Parses the current URL search string into key value pairs.
      * 
+     * @param {string} [url=location.href] The URL to parse. Defaults to the current url.
      * @return {object} The key/value pairs of URL paramaters.
      */
-    util.parseUrlParams = function() {
-        if(!location.search) {
-            return false;
-        }
+    util.parseUrlParams = function(url) {
+        var url = url || location.href;
         var parsedParameters = {};
-        var uriParameters = location.search.substr(1).split('&');
-        $.each(uriParameters, function(i,v) {
-            var parameter = v.split('=');
-            parsedParameters[parameter[0]] = decodeURIComponent(parameter[1]);
-        });
+        url = util.parseUrl(url);
+        if(url.search && url.search.length > 0) {
+            var uriParameters = url.search.split('&');
+            $.each(uriParameters, function(i,v) {
+                var parameter = v.split('=');
+                if(parameter.length === 2) {
+                    parsedParameters[parameter[0]] = decodeURIComponent(parameter[1]);
+                }
+            });
+        }
         return parsedParameters;
+    };
+    
+    /**
+     * Redirects the browser to a given URL.
+     * 
+     * @param {string} url The URL to redirect the user to.
+     * @param {object} options Extra optional parameters.
+     * not be registered in Google Analytics.
+     */
+    util.goToUrl = function(url, options) {
+        options = options || {};
+        var track = options.track || true;
+        var action = options.eventAction || 'Click';
+        var label = options.eventLabel || url;
+        var replace = options.replace || false;
+        if(track && stc.analytics && stc.analytics.sendEvent) {
+            stc.analytics.sendEvent('Outbound link', action, label);
+        }
+        if(options.replace) {
+            window.location.replace(url);
+        }
+        else {
+            window.location.href = url;
+        }
     };
     
     /**
@@ -208,6 +270,34 @@ var stc = stc || {};
     /* checks if the browser is Internet Explorer */
     util.msie = ~window.navigator.userAgent.indexOf('MSIE ') 
             || ~window.navigator.userAgent.indexOf('Trident/');
+    
+    /**
+     * Adds multiple listeners and binds them to a single callback function.
+     * 
+     * @param {array} events The array of events to listen to.
+     * @param {string} name A unique name to give to this multi listener.
+     * @param {type} callback The callback function to execute once all listeners have been fired.
+     * @return {bool} False if no events are passed
+     */
+    util.listenToMultiEvents = function(events, name, callback) {
+        if(events.length < 1) {
+            return false;
+        }
+        stcEventsNumber = stcEventsNumber = [];
+        stcEventsNumber[name] = stcEventsNumber[name] || 0;
+        $.each(events, function(i,v) {
+            window.addEventListener(v, function() {
+                stcEventsNumber[name] += 1;
+                if(stcEventsNumber[name] === events.length) {
+                    stcEventsNumber[name] = 0;
+                    callback();
+                }
+            });
+        });
+    };
+    
+    /* send a ready event that can be used by inline scripts */
+    util.createEvent("stcReady");
     
 }(stc.util = stc.util || {}, jQuery));
 
@@ -355,6 +445,34 @@ window.addEventListener('load', function(){
 
 });
 
+
+var stc = stc || {};
+(function(inter, $){
+    /**
+     * Displays an animated loader while an asynchronous actions takes place.
+     * 
+     * @param {string} [element=body] The html ELEMENT TO DISPLAY THE LOADER IN.
+     *   Defaults to body.
+     */
+    inter.showLoader = function(element) {
+        var element = element || $('body');
+        var loaderHtml = '<div class="stc-loader">' +
+                              '<div class="stc-loader-inner">' +
+                                  '<i class="fa fstc fstc-circle fa-spin fa-4x"></i>' +
+                                  '<span class="sr-only">Loading...</span>' +
+                              '</div>' +
+                         '</div>';
+        $(element).append($(loaderHtml).hide().fadeIn("fast"));
+    };
+    
+    inter.hideLoader = function(element) {
+        var element = element || $('body');
+        $(element).find('div.stc-loader').fadeOut("fast", function(e) { $(this).remove(); });
+    }; 
+
+    
+}(stc.inter = stc.inter || {}, jQuery));
+
 var stc = stc || {};
 (function(geo, $){
 
@@ -388,10 +506,10 @@ var stc = stc || {};
      * @return {Boolean} False if no country set or invalid input.
      */
     geo.changeCountryLink = function(linkElement, countryLinks) {
-        if(!geo.country || geo.country === "" || !countryLinks[stc.geo.country]) {
+        if(!geo.country || geo.country === "" || !countryLinks[geo.country]) {
             return false;
         }
-        $(linkElement).attr('href', countryLinks[stc.geo.country]);
+        $(linkElement).attr('href', countryLinks[geo.country]);
     };
 
     /**
@@ -753,15 +871,19 @@ var stc = stc || {};
     
     /**
      * Redirects visitors to a Member website, defaults to current member country.
+     * 
      * @param {object} [member = geo.memberCountry] The Member object to redirect to.
+     * @param {object} [options] The optional parameters to pass to util.goToUrl().
      * @return {boolean} True if redirection occurs or false.
      */
-    geo.goToMemberSite = function(member) {
+    geo.goToMemberSite = function(member, options) {
         member = member || geo.memberCountry;
+        options = options || {};
         if(typeof member === "undefined" || typeof member.url === "undefined") {
             return false;
         }
-        window.location = member.url;
+        options.eventLabel = member.iso + " - " + member.url;
+        stc.util.goToUrl(member.url, options);
         return true;
     };
     
@@ -770,8 +892,9 @@ var stc = stc || {};
      */
     geo.goToMemberSiteOnLoad = function() {
         stc.util.hideOnLoad();
-        window.addEventListener('countryIsSet', function() {
-            if(!geo.goToMemberSite()) {
+        //wait for load event as well so that GA is available.
+        stc.util.listenToMultiEvents(['load','countryIsSet'], 'redirectOnLoad',function() {
+            if(!geo.goToMemberSite(null, {redirect: true, eventAction: 'Redirect'})) {
                 stc.util.unhide();
             }
         });
@@ -795,7 +918,10 @@ var stc = stc || {};
         //if the value is a url, then add an onchange redirect behaviour 
         if(/url/.test(attribute)) {
             $(select).on('change', function() {
-                window.location = $(this).val();
+                stc.util.goToUrl($(this).val(), {eventLabel: $(this).find('option:selected').attr('data-geo') + " - " + $(this).val()});
+            }).closest('form').on('submit', function(e) {
+                e.preventDefault();
+                stc.util.goToUrl($(select).val());
             });
         }
     };
@@ -807,7 +933,7 @@ var stc = stc || {};
      * @param {HTMLElement} [element = body]
      *   The HTML element to place the modal window in. Defaults to body.
      * @param {int} [days = 1]
-     *   The number of days to remember the visitor choice (if they choose to stay). Defaults to 1 day.
+     *   The number of days to remember the visitor's choice (if they choose to stay). Defaults to 1 day.
      */
     geo.suggestMemberSite = function(member, element, days) {
         member = member || geo.memberCountry;
