@@ -77,11 +77,11 @@ var stc = stc || {};
      * @return {object} The parsed URL object.
      * @see https://github.com/angular/angular.js/blob/v1.4.4/src/ng/urlUtils.js
      */
-    util.parseUrl = function (url) {
+    util.parseURL = function (url) {
        
-        var urlParsingNode = util.loadUrlNode(url);
+        var urlParsingNode = util.loadURLNode(url);
 
-        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+        // urlParsingNode provides the URLUtils interface - http://url.spec.whatwg.org/#urlutils
         return {
             href: urlParsingNode.href,
             protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
@@ -102,7 +102,7 @@ var stc = stc || {};
      * @param {string} url The URL to parse.
      * @return {Element} The anchor element.
      */
-    util.loadUrlNode = function(url) {
+    util.loadURLNode = function(url) {
         var urlParsingNode = document.createElement("a");
         var href = url;
         if (util.msie) {
@@ -121,13 +121,13 @@ var stc = stc || {};
      * @param {string} url The url to test
      * @return {Boolean} True if local or false
      */
-    util.isLocalUrl = function(url) {
-        var parsedUrl = util.parseUrl(url);
-        return parsedUrl.hostname === window.location.hostname;
+    util.isLocalURL = function(url) {
+        var parsedURL = util.parseURL(url);
+        return parsedURL.hostname === window.location.hostname;
     };
     
     /* list of extensions associated with file downloads */
-    util.fileDownloadExt = ['pdf', 'doc', 'docx', 'xlsx', 'rtf', 'xls', 'csv'];
+    util.fileDownloadExt = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'rtf', 'csv'];
     
     /**
      * Checks if a given URL is a file download.
@@ -135,7 +135,7 @@ var stc = stc || {};
      * @param {string} url The url to test
      * @return {Boolean} True if file or false
      */
-    util.isFileUrl = function(url) {
+    util.isFileURL = function(url) {
         var pattern = new RegExp('.+\\.(' + util.fileDownloadExt.join('|') + ')((\\?|#).+)?$', 'i');
         return pattern.test(url);
     };
@@ -146,9 +146,9 @@ var stc = stc || {};
     * @param {string} url The URL string to be normalized to an absolute URL.
     * @return {string} The normalized, absolute URL.
     */
-    util.absoluteUrl = function(url) {
-        var parsedUrl = util.parseUrl(url);
-        return parsedUrl.href;
+    util.absoluteURL = function(url) {
+        var parsedURL = util.parseURL(url);
+        return parsedURL.href;
     };
     
     /**
@@ -158,11 +158,11 @@ var stc = stc || {};
      * @return {string} The updated URL.
      */
     util.forwardUTM = function(url) {
-        var params = util.parseUrlParams();
+        var params = util.parseURLParams();
         if(jQuery.isEmptyObject(params)) {
             return url;
         }
-        var urlParsingNode = util.loadUrlNode(url);
+        var urlParsingNode = util.loadURLNode(url);
         
         var queryString = "";
         $.each(params, function(i,v) {
@@ -189,11 +189,11 @@ var stc = stc || {};
      * @return {string} The updated URL.
      */
     util.addUTM = function(url, source, medium, campaign) {
-        var params = util.parseUrlParams(url);
+        var params = util.parseURLParams(url);
         if(params.utm_source) {
             return url;
         }
-        var urlParsingNode = util.loadUrlNode(url);
+        var urlParsingNode = util.loadURLNode(url);
 
         var queryString = "&utm_source=" + source + "&utm_medium=" + medium + "&utm_campaign=" + campaign;
         if(urlParsingNode.search) {
@@ -211,10 +211,10 @@ var stc = stc || {};
      * @param {string} [url=location.href] The URL to parse. Defaults to the current url.
      * @return {object} The key/value pairs of URL paramaters.
      */
-    util.parseUrlParams = function(url) {
+    util.parseURLParams = function(url) {
         var url = url || location.href;
         var parsedParameters = {};
-        url = util.parseUrl(url);
+        url = util.parseURL(url);
         if(url.search && url.search.length > 0) {
             var uriParameters = url.search.split('&');
             $.each(uriParameters, function(i,v) {
@@ -232,9 +232,8 @@ var stc = stc || {};
      * 
      * @param {string} url The URL to redirect the user to.
      * @param {object} options Extra optional parameters.
-     * not be registered in Google Analytics.
      */
-    util.goToUrl = function(url, options) {
+    util.goToURL = function(url, options) {
         options = options || {};
         var track = options.track || true;
         var action = options.eventAction || 'Click';
@@ -297,7 +296,12 @@ var stc = stc || {};
     };
     
     /* send a ready event that can be used by inline scripts */
-    util.createEvent("stcReady");
+    $(function() { 
+        stc.util.createEvent("stcReady"); 
+    });
+    
+    /* remove no-js class */
+    $('body').removeClass("no-js");
     
 }(stc.util = stc.util || {}, jQuery));
 

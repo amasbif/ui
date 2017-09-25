@@ -95,3 +95,7 @@ a {
   @include transition-duration(250ms);
   transition-timing-function: ease;
 }
+
+.text-red {
+  color: $stc-red;
+}

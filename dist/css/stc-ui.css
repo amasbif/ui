@@ -7932,11 +7932,11 @@ button.close {
   .carousel-indicators {
     bottom: 20px; } }
 
-.clearfix:before, .stc-blocktitle.stc-blocktitle-split:before, .clearfix:after, .stc-blocktitle.stc-blocktitle-split:after {
+.clearfix:before, .stc-blocktitle.stc-blocktitle-split:before, form .stc-radio-tabs:before, .clearfix:after, .stc-blocktitle.stc-blocktitle-split:after, form .stc-radio-tabs:after {
   content: " ";
   display: table; }
 
-.clearfix:after, .stc-blocktitle.stc-blocktitle-split:after {
+.clearfix:after, .stc-blocktitle.stc-blocktitle-split:after, form .stc-radio-tabs:after {
   clear: both; }
 
 .center-block {
@@ -8379,8 +8379,17 @@ a {
   transition-duration: 250ms;
   transition-timing-function: ease; }
 
+.text-red {
+  color: #DA291C; }
+
 .no-js .js-only {
   display: none; }
+
+.stc-padding-vert {
+  padding: 20px 0; }
+
+.stc-opacity-60 {
+  opacity: 0.6; }
 
 .stc-yt {
   position: relative;
@@ -8459,6 +8468,12 @@ a {
 .btn {
   font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase; }
+  .btn.btn-empty {
+    border-color: #fff;
+    color: #fff; }
+    .btn.btn-empty:hover, .btn.btn-empty:active {
+      background-color: #fff;
+      color: #DA291C; }
 
 .stc-loader {
   width: 100%;
@@ -8472,13 +8487,102 @@ a {
   margin: auto;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.8);
-  color: #DA291C; }
+  color: #DA291C;
+  z-index: 99; }
   .stc-loader .stc-loader-inner {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 3em;
-    width: 3em;
+    height: 4em;
+    width: 4em;
     margin: auto; }
+
+form .form-control, form .input-group-addon {
+  border-color: #D1CCBD; }
+
+form .stc-radio-tabs {
+  width: 100%;
+  list-style: none;
+  margin: 20px 0;
+  padding: 0;
+  border: 1px solid #D1CCBD;
+  border-width: 1px;
+  overflow: hidden;
+  border-radius: 4px; }
+  form .stc-radio-tabs li {
+    width: 50%;
+    float: left;
+    border: 1px solid #D1CCBD;
+    border-width: 0 0 0 1px; }
+    form .stc-radio-tabs li:first-child {
+      border: 0; }
+    form .stc-radio-tabs li label {
+      cursor: pointer;
+      margin: 0;
+      display: block;
+      width: 100%;
+      line-height: 2.5;
+      text-align: center;
+      color: #bcb59f;
+      font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      text-transform: uppercase;
+      font-weight: normal; }
+    form .stc-radio-tabs li input[type="radio"] + label {
+      -webkit-transition-property: background-color, color;
+      transition-property: background-color, color;
+      -webkit-transition-duration: 250ms;
+      transition-duration: 250ms; }
+    form .stc-radio-tabs li input[type="radio"]:hover + label {
+      color: #222221; }
+    form .stc-radio-tabs li input[type="radio"]:checked + label {
+      background: #DA291C;
+      color: #fff; }
+  form .stc-radio-tabs.stc-rt-num-3 li {
+    width: 33.33333%; }
+  form .stc-radio-tabs.stc-rt-num-4 li {
+    width: 25%; }
+  form .stc-radio-tabs.stc-rt-num-5 li {
+    width: 20%; }
+  form .stc-radio-tabs.stc-rt-num-6 li {
+    width: 16.66667%; }
+  form .stc-radio-tabs.stc-rt-lg li label {
+    font-size: 24px; }
+  form .stc-radio-tabs.stc-rt-sm li label {
+    font-size: 14px; }
+  form .stc-radio-tabs.stc-rt-3 li {
+    width: 33.33333%; }
+
+form .input-group * {
+  font-size: 24px;
+  font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif; }
+
+form label {
+  font-weight: normal; }
+
+form input, form select {
+  border-left: 3px solid;
+  transition: border-color .5s ease-out; }
+  form input:invalid, form select:invalid {
+    border-left-color: #DA291C; }
+  form input:valid, form select:valid {
+    border-left-color: #5cb85c; }
+  form input:optional, form select:optional {
+    border-left-color: #D1CCBD; }
+
+form .secure-panel {
+  background: #f0efea;
+  margin: 0 -15px;
+  padding: 1px 15px 15px; }
+  form .secure-panel span.help-block {
+    color: #777777; }
+
+@media only screen and (min-width: 992px) {
+  form .stc-form-bg {
+    background-color: #f7f6f3; }
+  form .btn-group-justified {
+    width: auto; } }
+
+.stc-bg-biscuit-light {
+  background-color: #f0efea; }

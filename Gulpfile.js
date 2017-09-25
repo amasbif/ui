@@ -73,7 +73,7 @@ gulp.task('scripts:watch', function () {
 /**
  * Minify css files
  */
-gulp.task('cssmin', ['sass'], function() {
+gulp.task('cssmin', function() {
     return gulp.src(paths.toMin)
       .pipe(cssmin())
       .pipe(rename({ suffix: '.min' }))

@@ -108,11 +108,11 @@ window.addEventListener('load', function(){
                     analytics.sendEvent($(this).attr('data-event'), 'click', url);
                 }
                 // Link is a file download
-                else if (stc.util.isFileUrl(url)) {
+                else if (stc.util.isFileURL(url)) {
                     analytics.sendEvent('Download', 'click', url);
                 }
                 // Link is outbound
-                else if(!stc.util.isLocalUrl(url)) {
+                else if(!stc.util.isLocalURL(url)) {
                     analytics.sendEvent('Outbound link', 'click', url);
                 }
             });

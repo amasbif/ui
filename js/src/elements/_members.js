@@ -9,6 +9,7 @@ var stc = stc || {};
             "iso": "AU",
             "title": "Australia",
             "url": "http://www.savethechildren.org.au",
+            "url_donate": "https://www.savethechildren.org.au/donate/today",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -16,6 +17,15 @@ var stc = stc || {};
             "iso": "CA",
             "title": "Canada",
             "url": "http://www.savethechildren.ca",
+            "url_donate": "https://support.savethechildren.ca/DonatetoChildren",
+            "mappedCountries": [],
+            "supportedLanguages": []
+        },
+        "CO": {
+            "iso": "CO",
+            "title": "Colombia",
+            "url": "https://www.savethechildren.org.co",
+            "url_donate": "https://www.savethechildren.org.co/donar",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -23,6 +33,7 @@ var stc = stc || {};
             "iso": "DK",
             "title": "Denmark",
             "url": "http://www.redbarnet.dk",
+            "url_donate": "https://redbarnet.dk/stoet",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -30,6 +41,7 @@ var stc = stc || {};
             "iso": "DO",
             "title": "Dominican Republic",
             "url": "http://savethechildren.org.do",
+            "url_donate": "http://savethechildren.org.do",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -37,6 +49,7 @@ var stc = stc || {};
             "iso": "FJ",
             "title": "Fiji",
             "url": "http://www.savethechildren.org.fj",
+            "url_donate": "http://www.savethechildren.org.fj/donate-now",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -44,6 +57,7 @@ var stc = stc || {};
             "iso": "FI",
             "title": "Finland",
             "url": "http://www.pelastakaalapset.fi",
+            "url_donate": "https://www.pelastakaalapset.fi/auta-lapsia/lahjoita/#/kertalahjoitus",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -51,7 +65,16 @@ var stc = stc || {};
             "iso": "DE",
             "title": "Germany",
             "url": "http://www.savethechildren.de",
+            "url_donate": "https://www.savethechildren.de/jetzt-spenden",
             "mappedCountries": ["AT"],
+            "supportedLanguages": []
+        },
+        "GT": {
+            "iso": "GT",
+            "title": "Guatemala",
+            "url": "http://www.savethechildren.org.gt",
+            "url_donate": "http://savethechildren.org.gt/como-ayudar",
+            "mappedCountries": [],
             "supportedLanguages": []
         },
         "HN": {
@@ -65,6 +88,7 @@ var stc = stc || {};
             "iso": "HK",
             "title": "Hong Kong",
             "url": "http://www.savethechildren.org.hk",
+            "url_donate": "https://savethechildren.org.hk/monthlygiving.aspx",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -72,6 +96,7 @@ var stc = stc || {};
             "iso": "IS",
             "title": "Iceland",
             "url": "http://www.barnaheill.is",
+            "url_donate": "http://www.barnaheill.is/Borninogthu/Einstaklingar/heillavinur",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -79,6 +104,15 @@ var stc = stc || {};
             "iso": "IN",
             "title": "India",
             "url": "http://www.savethechildren.in",
+            "url_donate": "https://support.savethechildren.in/#donate-form ",
+            "mappedCountries": [],
+            "supportedLanguages": []
+        },
+        "ID": {
+            "iso": "ID",
+            "title": "Indonesia",
+            "url": "https://www.stc.or.id",
+            "url_donate": "https://www.stc.or.id/donate",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -86,6 +120,7 @@ var stc = stc || {};
             "iso": "IT",
             "title": "Italy",
             "url": "http://www.savethechildren.it",
+            "url_donate": "https://www.savethechildren.it/dona-ora",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -93,6 +128,7 @@ var stc = stc || {};
             "iso": "JP",
             "title": "Japan",
             "url": "http://www.savechildren.or.jp",
+            "url_donate": "http://www.savechildren.or.jp/contribute",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -107,6 +143,7 @@ var stc = stc || {};
             "iso": "KR",
             "title": "Korea",
             "url": "http://www.sc.or.kr",
+            "url_donate": "https://m.sc.or.kr/support/supportMonth.do",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -114,6 +151,7 @@ var stc = stc || {};
             "iso": "LT",
             "title": "Lithuania",
             "url": "https://www.gelbekitvaikus.lt",
+            "url_donate": "https://www.gelbekitvaikus.lt/paaukok",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -121,6 +159,7 @@ var stc = stc || {};
             "iso": "MX",
             "title": "Mexico",
             "url": "https://www.savethechildren.mx",
+            "url_donate": "https://www.savethechildren.mx/donar",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -128,6 +167,7 @@ var stc = stc || {};
             "iso": "NL",
             "title": "Netherlands",
             "url": "https://www.savethechildren.nl",
+            "url_donate": "https://www.savethechildren.nl/help-mee/donee",
             "mappedCountries": ["BE"],
             "supportedLanguages": []
         },
@@ -135,6 +175,7 @@ var stc = stc || {};
             "iso": "NZ",
             "title": "New Zealand",
             "url": "http://www.savethechildren.org.nz",
+            "url_donate": "https://savethechildren.org.nz/how-to-help/donate",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -142,6 +183,15 @@ var stc = stc || {};
             "iso": "NO",
             "title": "Norway",
             "url": "http://www.reddbarna.no",
+            "url_donate": "https://www.reddbarna.no/gi",
+            "mappedCountries": [],
+            "supportedLanguages": []
+        },
+        "PH": {
+            "iso": "PH",
+            "title": "Philippines",
+            "url": "http://www.savethechildren.org.ph",
+            "url_donate": "https://donate.savethechildren.org.ph",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -149,6 +199,7 @@ var stc = stc || {};
             "iso": "RO",
             "title": "Romania",
             "url": "http://www.salvaticopiii.ro",
+            "url_donate": "http://www.salvaticopiii.ro/?id2=doneaza",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -156,6 +207,7 @@ var stc = stc || {};
             "iso": "ZA",
             "title": "South Africa",
             "url": "http://www.savethechildren.org.za",
+            "url_donate": "https://www.savethechildren.org.za/donate",
             "mappedCountries": ["ZW", "NA"],
             "supportedLanguages": []
         },
@@ -163,6 +215,7 @@ var stc = stc || {};
             "iso": "ES",
             "title": "Spain",
             "url": "http://www.savethechildren.es",
+            "url_donate": "https://www.savethechildren.es/colaborar-ong/hazte-socio-y-cambia-la-vida-de-los-ninos-y-ninas-mas-vulnerables",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -177,6 +230,7 @@ var stc = stc || {};
             "iso": "SE",
             "title": "Sweden",
             "url": "http://www.rb.se",
+            "url_donate": "https://www.raddabarnen.se/stod-oss/manadsgivare/#steg1",
             "mappedCountries": [],
             "supportedLanguages": []
         },
@@ -184,6 +238,7 @@ var stc = stc || {};
             "iso": "CH",
             "title": "Switzerland",
             "url": "http://www.savethechildren.ch",
+            "url_donate": "https://www.savethechildren.ch/de/online_spenden/spenden_neu.cfm",
             "mappedCountries": ["LI"],
             "supportedLanguages": []
         },
@@ -191,6 +246,7 @@ var stc = stc || {};
             "iso": "GB",
             "title": "United Kingdom",
             "url": "http://www.savethechildren.org.uk",
+            "url_donate": "https://secure.savethechildren.org.uk/donate",
             "mappedCountries": ["IE"],
             "supportedLanguages": []
         },
@@ -198,6 +254,7 @@ var stc = stc || {};
             "iso": "US",
             "title": "United States",
             "url": "http://www.savethechildren.org",
+            "url_donate": "https://secure.savethechildren.org/site/c.8rKLIXMGIpI4E/b.8102415/k.1377/Please_Give_Monthly_to_Save_the_Children/apps/ka/sd/donor.asp",
             "mappedCountries": [],
             "supportedLanguages": []
         }
@@ -217,7 +274,7 @@ var stc = stc || {};
             return false;
         }
         options.eventLabel = member.iso + " - " + member.url;
-        stc.util.goToUrl(member.url, options);
+        stc.util.goToURL(member.url, options);
         return true;
     };
     
@@ -228,7 +285,7 @@ var stc = stc || {};
         stc.util.hideOnLoad();
         //wait for load event as well so that GA is available.
         stc.util.listenToMultiEvents(['load','countryIsSet'], 'redirectOnLoad',function() {
-            if(!geo.goToMemberSite(null, {redirect: true, eventAction: 'Redirect'})) {
+            if(!geo.goToMemberSite(null, {replace: true, eventAction: 'Redirect'})) {
                 stc.util.unhide();
             }
         });
@@ -242,6 +299,9 @@ var stc = stc || {};
     geo.addMembersSelectOptions = function(select, attribute) {
         if(select[0].nodeName === "SELECT") {
             $.each(geo.members, function(i,v) {
+                if(attribute && !v[attribute]) {
+                    return true;
+                }
                 var value = v[attribute] || i;
                 var option = $('<option>' + v.title + '</option>').attr({"value": value, "data-geo": i});
                 $(select).append(option);
@@ -252,10 +312,10 @@ var stc = stc || {};
         //if the value is a url, then add an onchange redirect behaviour 
         if(/url/.test(attribute)) {
             $(select).on('change', function() {
-                stc.util.goToUrl($(this).val(), {eventLabel: $(this).find('option:selected').attr('data-geo') + " - " + $(this).val()});
+                stc.util.goToURL($(this).val(), {eventLabel: $(this).find('option:selected').attr('data-geo') + " - " + $(this).val()});
             }).closest('form').on('submit', function(e) {
                 e.preventDefault();
-                stc.util.goToUrl($(select).val());
+                stc.util.goToURL($(select).val());
             });
         }
     };
@@ -289,7 +349,7 @@ var stc = stc || {};
                             .append('<p>Good news, Save the Children has a website in ' + ($.inArray(member.iso, ['GB','US','NL']) > -1 ? "the " : "") + member.title + '.<br/>Do you wish to visit our ' + member.title + ' website?</p>')
                         )
                         .append($('<div/>').attr({class:'modal-footer'})
-                            .append($('<button/>').attr({type:'button', class:'btn btn-default', 'data-dismiss':'modal'}).html('Stay here'))
+                            .append($('<button/>').attr({type:'button', class:'btn btn-default', 'data-dismiss':'modal'}).html('Stay on global page'))
                             .append($('<a>').attr({href:member.url, class:'btn btn-primary'}).html('Go to ' + member.title))
                         )
                     )

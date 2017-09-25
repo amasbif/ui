@@ -20,7 +20,7 @@ jQuery(function ($) {
     QUnit.test('should correctly detect a local URL and output absolute URLs', function (assert) {
         assert.expect(2);
         var url = "/test/local/url";
-        assert.ok(stc.util.isLocalUrl(url), "URL is correctly detected as local");
-        assert.ok(stc.util.absoluteUrl(url).indexOf(url) > 1 && /^(?:[a-z]+:)?\/\//.test(stc.util.absoluteUrl(url)), "Absolute URL correctly given: " + stc.util.absoluteUrl(url));
+        assert.ok(stc.util.isLocalURL(url), "URL is correctly detected as local");
+        assert.ok(stc.util.absoluteURL(url).indexOf(url) > 1 && /^(?:[a-z]+:)?\/\//.test(stc.util.absoluteURL(url)), "Absolute URL correctly given: " + stc.util.absoluteURL(url));
     });
 });
