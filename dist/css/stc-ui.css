@@ -8499,8 +8499,48 @@ a {
     width: 4em;
     margin: auto; }
 
-form .form-control, form .input-group-addon {
-  border-color: #D1CCBD; }
+.form-control {
+  border: 1px solid #777777;
+  border-width: 0 0 1px;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: none;
+  padding: 6px;
+  background: none; }
+  .form-control:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-bottom-width: 2px;
+    border-bottom-color: #222221; }
+
+.form-group {
+  margin-bottom: 30px; }
+
+.input-group-addon {
+  padding: 6px 0;
+  background: none;
+  border: none; }
+  .input-group-addon:first-child {
+    position: absolute;
+    bottom: -7px;
+    left: -10px; }
+
+.input-lg, .input-group-lg > .form-control,
+.input-group-lg > .input-group-addon,
+.input-group-lg > .input-group-btn > .btn {
+  border-radius: none; }
+
+.input-group-lg > .form-control, .input-group-lg > .input-group-addon, .input-group-lg > .input-group-btn > .btn, .input-lg, .input-group-lg > .form-control,
+.input-group-lg > .input-group-addon,
+.input-group-lg > .input-group-btn > .btn {
+  font-size: 24px;
+  font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1;
+  padding: 2px 16px;
+  height: 43px; }
+
+.input-group .form-control {
+  padding-left: 20px; }
 
 form .stc-radio-tabs {
   width: 100%;
@@ -8525,7 +8565,7 @@ form .stc-radio-tabs {
       width: 100%;
       line-height: 2.5;
       text-align: center;
-      color: #bcb59f;
+      color: #777777;
       font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif;
       text-transform: uppercase;
       font-weight: normal; }
@@ -8554,29 +8594,26 @@ form .stc-radio-tabs {
   form .stc-radio-tabs.stc-rt-3 li {
     width: 33.33333%; }
 
-form .input-group * {
-  font-size: 24px;
-  font-family: "Trade Gothic LT", "Helvetica Neue", Helvetica, Arial, sans-serif; }
-
 form label {
   font-weight: normal; }
 
 form input, form select {
   border-left: 3px solid;
   transition: border-color .5s ease-out; }
-  form input:invalid, form select:invalid {
-    border-left-color: #DA291C; }
-  form input:valid, form select:valid {
-    border-left-color: #5cb85c; }
-  form input:optional, form select:optional {
-    border-left-color: #D1CCBD; }
+  form input:invalid, form input:invalid:focus, form select:invalid, form select:invalid:focus {
+    border-bottom-color: #DA291C; }
+  form input:valid:focus, form select:valid:focus {
+    border-bottom-color: #222221; }
 
 form .secure-panel {
-  background: #f0efea;
-  margin: 0 -15px;
-  padding: 1px 15px 15px; }
+  background: #f7f6f3;
+  border: 1px dotted #777777;
+  border-width: 1px 0; }
   form .secure-panel span.help-block {
     color: #777777; }
+  @media only screen and (min-width: 992px) {
+    form .secure-panel {
+      margin: 0; } }
 
 @media only screen and (min-width: 992px) {
   form .stc-form-bg {

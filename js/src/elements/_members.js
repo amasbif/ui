@@ -65,7 +65,7 @@ var stc = stc || {};
             "iso": "DE",
             "title": "Germany",
             "url": "http://www.savethechildren.de",
-            "url_donate": "https://www.savethechildren.de/jetzt-spenden",
+            "url_donate": "https://spenden.savethechildren.de",
             "mappedCountries": ["AT"],
             "supportedLanguages": []
         },

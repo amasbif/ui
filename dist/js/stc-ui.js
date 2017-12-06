@@ -25,15 +25,17 @@ var stc = stc || {};
     /**
      * Sets a cookie.
      * 
-     * @param {String} cname Name of the cookie
-     * @param {String} cvalue Value of the cookie
-     * @param {Int} exdays Number of days the cookie will last
+     * @param {String} cname Name of the cookie.
+     * @param {String} cvalue Value of the cookie.
+     * @param {Int} exdays Number of days the cookie will last.
+     * @param (String) [domain] The domain name to set the cookie for.
      */
-    util.setCookie = function(cname, cvalue, exdays) {
+    util.setCookie = function(cname, cvalue, exdays, domain) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         var expires = "expires="+d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/" +
+                (domain ? ";domain=" + domain : "");
     };
 
     /**
@@ -238,7 +240,6 @@ var stc = stc || {};
         var track = options.track || true;
         var action = options.eventAction || 'Click';
         var label = options.eventLabel || url;
-        var replace = options.replace || false;
         if(track && stc.analytics && stc.analytics.sendEvent) {
             stc.analytics.sendEvent('Outbound link', action, label);
         }
@@ -353,17 +354,20 @@ window.addEventListener('load', function(){
          * @param {string} item_name The product name.
          * @param {string} item_sku The product SKU.
          * @param {number} amount The donation amount.
+         * @param (string) currency The three-letter currency code.
          * @return {undefined}
          */
-        analytics.sendDonation = function(trans_id, item_name, item_sku, amount) {
+        analytics.sendDonation = function(trans_id, item_name, item_sku, amount, currency) {
             if(!trans_id || !item_name || !item_sku || isNaN(amount)) {
                 return false;
             }
+            currency = currency || "USD";
             ga('require', 'ecommerce');
             ga('ecommerce:addTransaction', {
                 'id': trans_id,
                 'affiliation': stc.geo.t('Save the Children'),
-                'revenue': amount
+                'revenue': amount,
+                'currency': currency
             });
             ga('ecommerce:addItem', {
                 'id': trans_id,
@@ -371,7 +375,8 @@ window.addEventListener('load', function(){
                 'sku': item_sku,
                 'category': stc.geo.t('Donation'),
                 'price': amount,
-                'quantity': '1'
+                'quantity': '1',
+                'currency': currency
             });
             ga('ecommerce:send');
         };
@@ -448,6 +453,44 @@ window.addEventListener('load', function(){
     }(stc.analytics = stc.analytics || {}, ga, jQuery));
 
 });
+
+var stc = stc || {};
+
+(function(util, $){
+    
+    /**
+     * Adds a script dynamically and executes a callback function 
+     * when the script has loaded.
+     * 
+     * @param {string} src The URL of the script to load.
+     * @param {function} callback The callback function called upon load.
+     */
+    stc.util.addScript = function (src, callback) {
+        var s = document.createElement("script");
+        s.src = src;
+        s.async = false;
+        s.onload = callback;
+        document.body.appendChild(s);
+    };
+
+    /**
+     * Adds a stylesheet dynamically and executes a callback function 
+     * when the CSS has loaded.
+     * 
+     * @param {string} href The URL of the stylesheet to load.
+     * @param {function} callback The callback function called upon load.
+     */
+    stc.util.addCSS = function (href, callback) {
+        var s = document.createElement("link");
+        s.setAttribute("rel", "stylesheet");
+        s.setAttribute("type", "text/css");
+        s.setAttribute("href", href);		
+        s.onload = callback;
+        document.getElementsByTagName("head").item(0).appendChild(s);
+    };
+
+
+}(stc.util = stc.util || {}, jQuery));
 
 
 var stc = stc || {};
@@ -735,7 +778,7 @@ var stc = stc || {};
             "iso": "DE",
             "title": "Germany",
             "url": "http://www.savethechildren.de",
-            "url_donate": "https://www.savethechildren.de/jetzt-spenden",
+            "url_donate": "https://spenden.savethechildren.de",
             "mappedCountries": ["AT"],
             "supportedLanguages": []
         },

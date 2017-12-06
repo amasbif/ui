@@ -25,15 +25,17 @@ var stc = stc || {};
     /**
      * Sets a cookie.
      * 
-     * @param {String} cname Name of the cookie
-     * @param {String} cvalue Value of the cookie
-     * @param {Int} exdays Number of days the cookie will last
+     * @param {String} cname Name of the cookie.
+     * @param {String} cvalue Value of the cookie.
+     * @param {Int} exdays Number of days the cookie will last.
+     * @param {String} [domain] The domain name to set the cookie for.
      */
-    util.setCookie = function(cname, cvalue, exdays) {
+    util.setCookie = function(cname, cvalue, exdays, domain) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         var expires = "expires="+d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/" +
+                (domain ? ";domain=" + domain : "");
     };
 
     /**
@@ -238,7 +240,6 @@ var stc = stc || {};
         var track = options.track || true;
         var action = options.eventAction || 'Click';
         var label = options.eventLabel || url;
-        var replace = options.replace || false;
         if(track && stc.analytics && stc.analytics.sendEvent) {
             stc.analytics.sendEvent('Outbound link', action, label);
         }

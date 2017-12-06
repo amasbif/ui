@@ -26,17 +26,20 @@ window.addEventListener('load', function(){
          * @param {string} item_name The product name.
          * @param {string} item_sku The product SKU.
          * @param {number} amount The donation amount.
+         * @param {string} currency The three-letter currency code.
          * @return {undefined}
          */
-        analytics.sendDonation = function(trans_id, item_name, item_sku, amount) {
+        analytics.sendDonation = function(trans_id, item_name, item_sku, amount, currency) {
             if(!trans_id || !item_name || !item_sku || isNaN(amount)) {
                 return false;
             }
+            currency = currency || "USD";
             ga('require', 'ecommerce');
             ga('ecommerce:addTransaction', {
                 'id': trans_id,
                 'affiliation': stc.geo.t('Save the Children'),
-                'revenue': amount
+                'revenue': amount,
+                'currency': currency
             });
             ga('ecommerce:addItem', {
                 'id': trans_id,
@@ -44,7 +47,8 @@ window.addEventListener('load', function(){
                 'sku': item_sku,
                 'category': stc.geo.t('Donation'),
                 'price': amount,
-                'quantity': '1'
+                'quantity': '1',
+                'currency': currency
             });
             ga('ecommerce:send');
         };
