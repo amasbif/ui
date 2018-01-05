@@ -8439,7 +8439,14 @@ a {
     color: #222221;
     background: #fff;
     box-shadow: 0.15em 0 0 #fff, -0.15em 0 0 #fff;
-    box-decoration-break: clone; }
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    -moz-box-decoration-break: clone;
+    -ms-box-decoration-break: clone;
+    border-radius: 0.08em;
+    line-height: 1em;
+    margin-top: -0.09em;
+    margin-bottom: -0.09em; }
     .stc-blocktitle a strong, .stc-blocktitle span strong {
       color: #DA291C;
       font-weight: normal; }
@@ -8448,10 +8455,7 @@ a {
     clear: left;
     white-space: nowrap;
     display: inline;
-    line-height: 1.15em;
-    float: left;
-    margin-top: -0.09em;
-    margin-bottom: -0.09em; }
+    line-height: 1.15em; }
   .stc-blocktitle.stc-blocktitle-nospan {
     margin-left: 0;
     text-transform: uppercase;

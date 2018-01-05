@@ -46,4 +46,16 @@ jQuery(function ($) {
         assert.equal(stc.geo.t("bigmac", "fr"), "LE big mac", "Word correctly translated into French equivalent");
     });
     
+    QUnit.test('Should return a valid interpolated string', function (assert) {
+        assert.expect(1);
+        assert.equal(stc.geo.interpolate("Testing %{test}", {test: 'ABCD'}), "Testing ABCD", "Interpolation is correct");
+    });
+    
+    QUnit.test('Should return a valid interpolated translation', function (assert) {
+        assert.expect(1);
+        stc.geo.strings.fr = stc.geo.strings.fr || {};
+        stc.geo.strings.fr['Testing %{test} and %{other} and %{test} again'] = 'Testons %{test} et %{other} et encore %{test}';
+        assert.equal(stc.geo.t("Testing %{test} and %{other} and %{test} again", "fr", {test: 'ABCD', other: 'XYZ'}), "Testons ABCD et XYZ et encore ABCD", "Interpolation correctly translated into French");
+    });
+    
 });

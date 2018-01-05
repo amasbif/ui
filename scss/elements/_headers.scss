@@ -7,10 +7,17 @@
     background: $body-bg;
     box-shadow: 0.15em 0 0 $body-bg, -0.15em 0 0 $body-bg;
     box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    -moz-box-decoration-break: clone;
+    -ms-box-decoration-break: clone;
     strong {
       color: $stc-red;
       font-weight: normal;
     }
+    border-radius: 0.08em;
+    line-height: 1em;
+    margin-top: -0.09em;
+    margin-bottom: -0.09em;
   }
   &.stc-blocktitle-split {
     span {
@@ -19,9 +26,6 @@
       white-space: nowrap;
       display: inline;
       line-height: 1.15em;
-      float: left;
-      margin-top: -0.09em;
-      margin-bottom: -0.09em;
     }
     @extend .clearfix;
   }

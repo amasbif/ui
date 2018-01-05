@@ -15,11 +15,11 @@ jQuery(function ($) {
         //wait a tenth of a second for this as it can create conflicts with other calls
         var done = assert.async();
         setTimeout(function() {
-                stc.geo.swapGeoAlternatives("DE");
-                assert.ok($('#qunit-fixture').find('select').val().indexOf('.de') > 1, 'Country Member URL correctly selected - ' + $('#qunit-fixture').find('select').val());
-                done();
-            }, 100);
-        });
+            stc.geo.swapGeoAlternatives("DE");
+            assert.ok($('#qunit-fixture').find('select').val().indexOf('.de') > 1, 'Country Member URL correctly selected - ' + $('#qunit-fixture').find('select').val());
+            done();
+        }, 100);
+    });
     
     QUnit.test('Should create a Member country suggestion modal', function (assert) {
         assert.expect(1);

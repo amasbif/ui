@@ -32,6 +32,23 @@ var stc = stc || {};
         s.onload = callback;
         document.getElementsByTagName("head").item(0).appendChild(s);
     };
+    
+    /**
+     * Checks if a given object already exists or waits for the relevant event
+     * before firing a callback function.
+     * 
+     * @param {object} object The object to validate..
+     * @param {type} event The event to listen for in case the object doesn't exist.
+     * @param {type} callback The callback function to execute.
+     */
+    util.waitForObjectOrEvent = function(object, event, callback) {
+        if(object) {
+            callback();
+        }
+        else {
+            window.addEventListener(event, callback);
+        }
+    };
 
 
 }(stc.util = stc.util || {}, jQuery));
