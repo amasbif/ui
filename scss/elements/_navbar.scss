@@ -1,0 +1,108 @@
+.main-nav {
+    border-bottom: 1px solid $stc-biscuit;
+    background-color: $body-bg;
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    min-height: 50px;
+    line-height: 50px;
+    @media (min-width: $screen-md-min) { 
+        min-height: 64px;
+        line-height: 64px;
+    }
+    .main-nav-wrapper {
+        @media (min-width: $screen-md-min) {
+            padding: 0 30px;
+        }
+    }
+    .main-nav-logo {
+        display: inline-block;
+        img {
+            width: 141px;
+        }
+        @media (min-width: $screen-md-min) { 
+            img {
+                width: 179px;
+            }
+        }
+    }
+    .header-menu-desktop {
+        float: right;
+        ul.main-menu-nav {
+            margin: 0;
+            display: inline-block;
+            li {
+                display: inline-block;
+                font-size: 20px;
+                text-transform: uppercase;
+                margin: 0 0.5em;
+                font-family: $font-family-header;
+                a {
+                    color: $stc-black;
+                    &:focus, &:hover, &.active, &.active-trail {
+                        color: $stc-red;
+                    }
+                }
+            }
+        }
+        .form-search {
+            display: inline-block;
+            width: 300px;
+            .input-group {
+                display: inline;
+            }
+            input {
+                font-size: 0;
+                border: 0;
+                width: 0;
+            }
+            button {
+                display: none;
+            }
+            .form-actions {
+                display: none;
+            }
+            &:after {
+                content: "\f002";
+                font-family: fontAwesome;
+                font-size: 24px;
+                position: relative;
+                right: 0px;
+                top: -1px;
+                z-index: 0;
+            }
+        }     
+        @media (max-width: $screen-sm-max) { 
+                display: none;
+        }
+    }
+    .header-menu-mobile {
+        float: right;        
+        @media (min-width: $screen-md-min) { 
+            display: none;
+        }
+        a {
+            svg {
+                fill: $stc-black;
+                &:focus, &:hover {
+                    fill: $stc-red;
+                }
+            }
+        }
+    }
+    .sub-nav-menu {
+        display: none;
+        border-top: 1px solid $stc-biscuit;
+    }
+
+    .mobile-menu {
+        display: none;
+    }
+}
+
+main {
+    padding-top: 51px;
+    @media (min-width: $screen-md-min) { 
+        padding-top: 65px
+    }
+}

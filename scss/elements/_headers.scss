@@ -35,7 +35,11 @@
     line-height: 1em;
     background: $body-bg;
     box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    -moz-box-decoration-break: clone;
+    -ms-box-decoration-break: clone;
     box-shadow: 0.15em 0 0 $body-bg, -0.15em 0 0 $body-bg;
+    border-radius: 0.08em;
     color: $gray-base;
     display: inline;
     strong {
